@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "analysis.h"
+
 #include <iostream>
 #include <QLogValueAxis>
 #include <QLineSeries>
@@ -20,7 +22,6 @@ float random_generator(float coeff){
     float right = 1 * coeff;
     static std::default_random_engine engine{std::random_device()()};
     static std::uniform_real_distribution<float> distribution{left, right};
-
     return distribution(engine);
 }
 
