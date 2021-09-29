@@ -15,14 +15,15 @@ QVector<float> minMax(QVector<float> x){
     return min_max;
 }
 
-QVector<float> averageValue(QVector<float> a){
-
-    return 1.0;
+float averageValue(QVector<float> x){
+    float sum = 0.0;
+    for (int i=0; i<x.length()-1; i++) { sum+=x[i]; }
+    return sum/x.length();
 }
 
-float get_statistics(){
-    QVector<float> x(1000);
-    float mean, dispersion, deviation, sk, epsilon, asympt, excess = 0.0;
-
-    return 1.0;
+float dispersion(QVector<float> x){
+    float sum = 0.0;
+    for (int i=0; i<x.length()-1; i++)
+    { sum+=(x[i] - averageValue(x)) * (x[i] - averageValue(x)); }
+    return sum/x.length();
 }
