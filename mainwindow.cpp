@@ -16,14 +16,7 @@
 
 using namespace QtCharts;
 
-// Генератор случайных чисел
-float random_generator(float coeff){
-    float left = -1 * coeff;
-    float right = 1 * coeff;
-    static std::default_random_engine engine{std::random_device()()};
-    static std::uniform_real_distribution<float> distribution{left, right};
-    return distribution(engine);
-}
+const int LENGTH = 1000;
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -35,47 +28,77 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    std::cout << random_generator(3.0) << std::endl;
-    ui->widget->clearGraphs();
+// ---------------- Генератор случайных чисел ----------------
+float MainWindow::randomGenerator(float coeff){
+    float left = -1.0 * coeff;
+    float right = 1.0 * coeff;
+    std::default_random_engine engine{std::random_device()()};
+    std::uniform_real_distribution<float> distribution{left, right};
+    return distribution(engine);
+}
+
+void MainWindow::on_pushButton_clicked(){
+    //int selectedTask =  ui->cbSelectTask->currentText().toInt();
+
+    randomCoeff = (float)ui->sbCoeff->value();
+    std::cout << randomCoeff << std::endl;
+
+    QVector<double> yLinInc(LENGTH), yLinDec(LENGTH),
+                    yExpInc(LENGTH), yExpDec(LENGTH),
+                    yRandom(LENGTH), x(LENGTH);
+
     double a = -1;
-    double b = 1;
-    //double h = 0.01;
-    int N = 1000;
-    //int len = (b - a) / h + 2;
-    QVector<double> x_lin_inc(N), y_lin_inc(N);
-    QVector<double> x_lin_dec(N), y_lin_dec(N);
-    QVector<double> x_exp_inc(N), y_exp_inc(N);
-    QVector<double> x_exp_dec(N), y_exp_dec(N);
-    QVector<double> x_random(N), y_random(N);
+    double b = 1; // ?
+    double beta = 1;
+    double alpha = -0.01;
 
-    int i = 0;
-    int beta = 100;
-    float alpha = -1;
-    for(int X=0; X<N-1; X++){
-        x_lin_inc[i] = X;
-        x_lin_dec[i] = X;
-        x_exp_inc[i] = X;
-        x_exp_dec[i] = X;
-        x_random[i] = X;
-        y_lin_inc[i] = -a * X;
-        y_lin_dec[i] = a * X + 1000;
-        y_exp_inc[i] = beta * std::exp(alpha * X);
-        y_exp_dec[i] = beta * std::exp(-alpha * X);
-        y_random[i] = random_generator(3.0);
+    for(int X=0; X<LENGTH-1; X++){
+        x[X] = X;
 
-        i++;
+        yLinInc[X] = -a * X;
+        yLinDec[X] = a * X + LENGTH;
+        yExpInc[X] = (double)(beta * exp(-alpha * X)); // определить
+        yExpDec[X] = (double)(beta * exp(alpha * X));  // границы
+        yRandom[X] = randomGenerator(randomCoeff);
     }
 
+// ---------------- Рисование ----------------
+
     ui->widget->addGraph();
-    ui->widget->graph(0)->setData(x_lin_inc, y_lin_inc);
+    ui->widget->graph(0)->setData(x, yLinInc);
+    ui->widget->xAxis->setRange(0, LENGTH+1);
+    ui->widget->yAxis->setRange(0, LENGTH+1);
+    ui->widget->replot();
 
-    ui->widget->xAxis->setLabel("x");
-    ui->widget->yAxis->setLabel("y");
+    ui->widget_2->addGraph();
+    ui->widget_2->graph(0)->setData(x, yLinDec);
+    ui->widget_2->xAxis->setRange(0, LENGTH+1);
+    ui->widget_2->yAxis->setRange(0, LENGTH+1);
+    ui->widget_2->replot();
 
-    ui->widget->xAxis->setRange(0, N+1);
-    ui->widget->yAxis->setRange(0, N+1);
+    ui->widget_3->addGraph();
+    ui->widget_3->graph(0)->setData(x, yExpInc);
+    ui->widget_3->xAxis->setRange(0, LENGTH+1);
+    ui->widget_3->yAxis->setRange(0, LENGTH+1);
+    ui->widget_3->replot();
+
+    ui->widget_4->addGraph();
+    ui->widget_4->graph(0)->setData(x, yExpDec);
+    ui->widget_4->xAxis->setRange(0, LENGTH+1); // определить границы
+    ui->widget_4->yAxis->setRange(0, LENGTH+1); // для у и х
+    ui->widget_4->replot();
+
+    ui->widget_5->addGraph();
+    ui->widget_5->graph(0)->setData(x, yRandom);
+    ui->widget_5->xAxis->setRange(0, LENGTH+1);
+    ui->widget_5->yAxis->setRange(-randomCoeff-0.5, randomCoeff+0.5);
+    ui->widget_5->replot();
+
+    ui->widget->clearGraphs();
+    ui->widget_2->clearGraphs();
+    ui->widget_3->clearGraphs();
+    ui->widget_4->clearGraphs();
+    ui->widget_5->clearGraphs();
 /*
     double minY, maxY = y[0];
     for(int i = 0; i<len; i++){
@@ -83,96 +106,17 @@ void MainWindow::on_pushButton_clicked()
         if (y[i]>maxY) maxY = y[i];
     }
 */
-    //ui->widget->yAxis->setRange(minY, maxY);
-
-    ui->widget->replot();
-
-    ui->widget_2->addGraph();
-    ui->widget_2->graph(0)->setData(x_lin_dec, y_lin_dec);
-
-    ui->widget_2->xAxis->setLabel("x");
-    ui->widget_2->yAxis->setLabel("y");
-
-    ui->widget_2->xAxis->setRange(0, N+1);
-
-/*    minY = y[0];
-    maxY = y[0];
-    for(int i = 0; i<len; i++){
-        if (y[i]<minY) minY = y[i];
-        if (y[i]>maxY) maxY = y[i];
-    }
-    ui->widget_2->yAxis->setRange(minY, maxY);
-*/
-    ui->widget_2->yAxis->setRange(0, 1001);
-    ui->widget_2->replot();
 
 // --------------------------------------------------
 
-    ui->widget_3->addGraph();
-    ui->widget_3->graph(0)->setData(x_exp_inc, y_exp_inc);
-
-    ui->widget_3->xAxis->setLabel("x");
-    ui->widget_3->yAxis->setLabel("y");
-
-    ui->widget_3->xAxis->setRange(0, N+1);
-
-/*    minY = y[0];
-    maxY = y[0];
-    for(int i = 0; i<len; i++){
-        if (y[i]<minY) minY = y[i];
-        if (y[i]>maxY) maxY = y[i];
-    }
-    ui->widget_3->yAxis->setRange(minY, maxY);
-*/
-    ui->widget_3->yAxis->setRange(0, 1001);
-    ui->widget_3->replot();
-
-// --------------------------------------------------
-
-    ui->widget_4->addGraph();
-    ui->widget_4->graph(0)->setData(x_exp_dec, y_exp_dec);
-
-    ui->widget_4->xAxis->setLabel("x");
-    ui->widget_4->yAxis->setLabel("y");
-
-    ui->widget_4->xAxis->setRange(0, N+1);
-/*    minY = y[0];
-    maxY = y[0];
-    for(int i = 0; i<len; i++){
-        if (y[i]<minY) minY = y[i];
-        if (y[i]>maxY) maxY = y[i];
-    }
-    ui->widget_4->yAxis->setRange(minY, maxY);
-*/
-    ui->widget_4->yAxis->setRange(0, 1001);
-    ui->widget_4->replot();
-
-// --------------------------------------------------
-
-    ui->widget_5->addGraph();
-    ui->widget_5->graph(0)->setData(x_random, y_random);
-
-    ui->widget_5->xAxis->setLabel("x");
-    ui->widget_5->yAxis->setLabel("y");
-
-    ui->widget_5->xAxis->setRange(0, N+1);
-/*
+/*  вычисление границ, может пригодиться
     minY = y[0];
     maxY = y[0];
     for(int i = 0; i<len; i++){
         if (y[i]<minY) minY = y[i];
         if (y[i]>maxY) maxY = y[i];
     }
-    ui->widget_5->yAxis->setRange(minY, maxY);
-*/
-    ui->widget_5->yAxis->setRange(-5, 5);
-    ui->widget_5->replot();
-}
+    ui->widget_2->yAxis->setRange(minY, maxY);*/
 
-
-
-/*void MainWindow::on_pushButton_clicked(){
-    QChartView *chrtView = new QChartView(this);
 
 }
-*/

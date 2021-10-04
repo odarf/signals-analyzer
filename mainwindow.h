@@ -12,6 +12,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    float randomCoeff = 0.0;
+    float randomGenerator(float coeff);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

@@ -15,6 +15,7 @@ SOURCES += \
     qcustomplot.cpp
 
 HEADERS += \
+    analysis.h \
     mainwindow.h \
     qcustomplot.h
 

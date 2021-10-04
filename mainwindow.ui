@@ -6,12 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
-    <height>763</height>
+    <width>980</width>
+    <height>747</height>
    </rect>
+  </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QCustomPlot" name="widget" native="true">
@@ -30,8 +36,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>680</y>
+      <x>890</x>
+      <y>670</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -75,8 +81,38 @@
      <rect>
       <x>20</x>
       <y>500</y>
-      <width>531</width>
+      <width>791</width>
       <height>200</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cbSelectTask">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>640</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>2</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QDoubleSpinBox" name="sbCoeff">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>670</y>
+      <width>62</width>
+      <height>22</height>
      </rect>
     </property>
    </widget>
@@ -86,7 +122,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>677</width>
+     <width>980</width>
      <height>20</height>
     </rect>
    </property>
