@@ -99,24 +99,19 @@ void MainWindow::on_pushButton_clicked(){
     ui->widget_3->clearGraphs();
     ui->widget_4->clearGraphs();
     ui->widget_5->clearGraphs();
-/*
-    double minY, maxY = y[0];
-    for(int i = 0; i<len; i++){
-        if (y[i]<minY) minY = y[i];
-        if (y[i]>maxY) maxY = y[i];
-    }
-*/
 
 // --------------------------------------------------
 
-/*  вычисление границ, может пригодиться
-    minY = y[0];
-    maxY = y[0];
-    for(int i = 0; i<len; i++){
-        if (y[i]<minY) minY = y[i];
-        if (y[i]>maxY) maxY = y[i];
-    }
-    ui->widget_2->yAxis->setRange(minY, maxY);*/
+/*
+ *  вычисление границ, может пригодиться
+ *  minY = y[0];
+ *  maxY = y[0];
+ *  for(int i = 0; i<len; i++){
+ *      if (y[i]<minY) minY = y[i];
+ *      if (y[i]>maxY) maxY = y[i];
+ *  }
+ *  ui->widget_2->yAxis->setRange(minY, maxY);
+ */
 
 
 }
