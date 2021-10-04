@@ -26,6 +26,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    ../qcustomplot-source/GPL.txt \
-    ../qcustomplot-source/changelog.txt
+DISTFILES +=
