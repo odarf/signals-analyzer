@@ -72,7 +72,7 @@ void MainWindow::on_pushButton_clicked(){
         for(int i=0; i<5; i++){
             for(int X=0; X<LENGTH-1; X++){
                 x[X] = X;
-                ySin[X] += amplitude[i] * sin(2 * 3.14 * frequency[i] * X * delta_t * randomGenerator(0.3)) * randomGenerator(randomGenerator(0.5));
+                ySin[X] += amplitude[i] * sin(2 * 3.14 * frequency[i] * X * delta_t);
             }
 
         }
