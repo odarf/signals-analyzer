@@ -45,12 +45,16 @@ void MainWindow::on_pushButton_clicked(){
 
     QVector<double> yLinInc(LENGTH), yLinDec(LENGTH),
                     yExpInc(LENGTH), yExpDec(LENGTH),
-                    yRandom(LENGTH), x(LENGTH);
+                    yRandom(LENGTH), ySin(3*LENGTH),
+                    x(LENGTH);
 
     double a = -1;
     double b = 1; // ?
     double beta = 1;
     double alpha = -0.01;
+    int amplitude[] = {10, 100, 15};
+    int frequency[] = {4, 37, 173};
+    float delta_t = 0.001;
 
     for(int X=0; X<LENGTH-1; X++){
         x[X] = X;
@@ -60,7 +64,27 @@ void MainWindow::on_pushButton_clicked(){
         yExpInc[X] = (double)(beta * exp(-alpha * X)); // определить
         yExpDec[X] = (double)(beta * exp(alpha * X));  // границы
         yRandom[X] = randomGenerator(randomCoeff);
+        //ySin[X] = a_first * sin(2 * 3.14 * f_first * X * delta_t);
     }
+
+    for(int count=0; count<3; count++){
+
+        for(int i=0; i<5; i++){
+            for(int X=0; X<LENGTH-1; X++){
+                x[X] = X;
+                ySin[X] += amplitude[i] * sin(2 * 3.14 * frequency[i] * X * delta_t * randomGenerator(0.3)) * randomGenerator(randomGenerator(0.5));
+            }
+
+        }
+    }
+    ui->widget_6->clearGraphs();
+    ui->widget_6->addGraph();
+    ui->widget_6->graph(0)->setData(x, ySin);
+    ui->widget_6->xAxis->setRange(0, LENGTH);
+    ui->widget_6->yAxis->setRange(-100, 100);
+    ui->widget_6->replot();
+    QThread::sleep(1);
+
 
 // ---------------- Рисование ----------------
 
@@ -93,6 +117,8 @@ void MainWindow::on_pushButton_clicked(){
     ui->widget_5->xAxis->setRange(0, LENGTH+1);
     ui->widget_5->yAxis->setRange(-randomCoeff-0.5, randomCoeff+0.5);
     ui->widget_5->replot();
+
+
 
     ui->widget->clearGraphs();
     ui->widget_2->clearGraphs();

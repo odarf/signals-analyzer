@@ -5,6 +5,8 @@
 
 class analysis
 {
+private:
+    QVector<float> min_max;
 public:
     analysis();
     float get_statistics();

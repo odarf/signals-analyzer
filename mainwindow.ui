@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>980</width>
-    <height>747</height>
+    <width>986</width>
+    <height>1127</height>
    </rect>
   </property>
   <property name="tabletTracking">
@@ -116,14 +116,24 @@
      </rect>
     </property>
    </widget>
+   <widget class="QCustomPlot" name="widget_6" native="true">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>730</y>
+      <width>790</width>
+      <height>290</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>980</width>
-     <height>20</height>
+     <width>986</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
