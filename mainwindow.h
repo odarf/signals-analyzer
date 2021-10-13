@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow
 public:
     float randomCoeff = 0.0;
     float randomGenerator(float coeff);
+    float fuckUp(float n);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

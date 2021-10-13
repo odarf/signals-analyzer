@@ -17,6 +17,7 @@
 using namespace QtCharts;
 
 const int LENGTH = 1000;
+const double DELTA = 50.0;
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -37,6 +38,10 @@ float MainWindow::randomGenerator(float coeff){
     return distribution(engine);
 }
 
+float MainWindow::fuckUp(float n){
+    return randomGenerator(n) * 1000.0;
+}
+
 void MainWindow::on_pushButton_clicked(){
     //int selectedTask =  ui->cbSelectTask->currentText().toInt();
 
@@ -46,7 +51,7 @@ void MainWindow::on_pushButton_clicked(){
     QVector<double> yLinInc(LENGTH), yLinDec(LENGTH),
                     yExpInc(LENGTH), yExpDec(LENGTH),
                     yRandom(LENGTH), ySin(3*LENGTH),
-                    x(LENGTH);
+                    x(LENGTH), xSin(LENGTH);
 
     double a = -1;
     double b = 1; // ?
@@ -66,25 +71,31 @@ void MainWindow::on_pushButton_clicked(){
         yRandom[X] = randomGenerator(randomCoeff);
         //ySin[X] = a_first * sin(2 * 3.14 * f_first * X * delta_t);
     }
-
+    float fUpCoeff = 0;
     for(int count=0; count<3; count++){
-
         for(int i=0; i<5; i++){
+            fUpCoeff = fuckUp(1);
             for(int X=0; X<LENGTH-1; X++){
-                x[X] = X;
-                ySin[X] += amplitude[i] * sin(2 * 3.14 * frequency[i] * X * delta_t);
+                xSin[X] = X;
+                ySin[X] += amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t) + DELTA;
             }
-
-            ui->widget_6->clearGraphs();
-            ui->widget_6->addGraph();
-            ui->widget_6->graph(0)->setData(x, ySin);
-            ui->widget_6->xAxis->setRange(0, LENGTH);
-            ui->widget_6->yAxis->setRange(-100, 100);
-            ui->widget_6->replot();
-            QThread::sleep(1);
         }
     }
 
+    for(int i=0; i<5; i++){
+        std::random_device rd;
+        std::mt19937 rng(rd());
+        std::uniform_int_distribution<int> uni(0,1000);
+        int randomValue = uni(rng);
+        ySin[randomValue] = fuckUp(2);
+    }
+
+    ui->widget_6->addGraph();
+    ui->widget_6->graph(0)->setData(xSin, ySin);
+    ui->widget_6->xAxis->setRange(0, LENGTH);
+    ui->widget_6->yAxis->setRange(-2500, 2500);
+    ui->widget_6->replot();
+    QThread::sleep(1);
 
 // ---------------- Рисование ----------------
 
@@ -118,13 +129,12 @@ void MainWindow::on_pushButton_clicked(){
     ui->widget_5->yAxis->setRange(-randomCoeff-0.5, randomCoeff+0.5);
     ui->widget_5->replot();
 
-
-
     ui->widget->clearGraphs();
     ui->widget_2->clearGraphs();
     ui->widget_3->clearGraphs();
     ui->widget_4->clearGraphs();
     ui->widget_5->clearGraphs();
+    ui->widget_6->clearGraphs();
 
 // --------------------------------------------------
 
@@ -138,6 +148,4 @@ void MainWindow::on_pushButton_clicked(){
  *  }
  *  ui->widget_2->yAxis->setRange(minY, maxY);
  */
-
-
 }
