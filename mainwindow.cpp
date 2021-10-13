@@ -75,15 +75,15 @@ void MainWindow::on_pushButton_clicked(){
                 ySin[X] += amplitude[i] * sin(2 * 3.14 * frequency[i] * X * delta_t);
             }
 
+            ui->widget_6->clearGraphs();
+            ui->widget_6->addGraph();
+            ui->widget_6->graph(0)->setData(x, ySin);
+            ui->widget_6->xAxis->setRange(0, LENGTH);
+            ui->widget_6->yAxis->setRange(-100, 100);
+            ui->widget_6->replot();
+            QThread::sleep(1);
         }
     }
-    ui->widget_6->clearGraphs();
-    ui->widget_6->addGraph();
-    ui->widget_6->graph(0)->setData(x, ySin);
-    ui->widget_6->xAxis->setRange(0, LENGTH);
-    ui->widget_6->yAxis->setRange(-100, 100);
-    ui->widget_6->replot();
-    QThread::sleep(1);
 
 
 // ---------------- Рисование ----------------
