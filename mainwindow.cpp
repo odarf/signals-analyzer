@@ -71,13 +71,12 @@ void MainWindow::on_pushButton_clicked(){
         yRandom[X] = randomGenerator(randomCoeff);
         //ySin[X] = a_first * sin(2 * 3.14 * f_first * X * delta_t);
     }
-    float fUpCoeff = 0;
+
     for(int count=0; count<3; count++){
         for(int i=0; i<5; i++){
-            fUpCoeff = fuckUp(1);
             for(int X=0; X<LENGTH-1; X++){
                 xSin[X] = X;
-                ySin[X] += amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t) + DELTA;
+                ySin[X] += amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t) + DELTA; //график со смещением с одним значением амплитуды и частоты
             }
         }
     }
@@ -87,7 +86,7 @@ void MainWindow::on_pushButton_clicked(){
         std::mt19937 rng(rd());
         std::uniform_int_distribution<int> uni(0,1000);
         int randomValue = uni(rng);
-        ySin[randomValue] = fuckUp(2);
+        ySin[randomValue] = fuckUp(2); //спайки
     }
 
     ui->widget_6->addGraph();
