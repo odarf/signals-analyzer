@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "processing.h"
+#include "analysis.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -14,7 +16,7 @@ class MainWindow : public QMainWindow
 public:
     float randomCoeff = 0.0;
     float randomGenerator(float coeff);
-    float fuckUp(float n);
+    float shift(float n);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

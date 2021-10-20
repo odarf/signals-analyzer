@@ -10,8 +10,9 @@ private:
 public:
     analysis();
     float get_statistics();
-    QVector<float> minMax();
-    float averageValue();
+    QVector<float> minMax(QVector<float>);
+    float averageValue(QVector<double>);
+    float dispersion(QVector<double>);
 };
 
 #endif // ANALYSIS_H

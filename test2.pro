@@ -12,11 +12,13 @@ SOURCES += \
     analysis.cpp \
     main.cpp \
     mainwindow.cpp \
+    processing.cpp \
     qcustomplot.cpp
 
 HEADERS += \
     analysis.h \
     mainwindow.h \
+    processing.h \
     qcustomplot.h
 
 FORMS += \

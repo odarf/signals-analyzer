@@ -15,6 +15,7 @@
 #include <random>
 
 using namespace QtCharts;
+using namespace std;
 
 const int LENGTH = 1000;
 const double DELTA = 50.0;
@@ -33,25 +34,27 @@ MainWindow::~MainWindow()
 float MainWindow::randomGenerator(float coeff){
     float left = -1.0 * coeff;
     float right = 1.0 * coeff;
-    std::default_random_engine engine{std::random_device()()};
-    std::uniform_real_distribution<float> distribution{left, right};
+    default_random_engine engine{random_device()()};
+    uniform_real_distribution<float> distribution{left, right};
     return distribution(engine);
 }
 
-float MainWindow::fuckUp(float n){
+float MainWindow::shift(float n){
     return randomGenerator(n) * 1000.0;
 }
 
 void MainWindow::on_pushButton_clicked(){
     //int selectedTask =  ui->cbSelectTask->currentText().toInt();
+    processing processing;
+
 
     randomCoeff = (float)ui->sbCoeff->value();
-    std::cout << randomCoeff << std::endl;
+    cout << randomCoeff << endl;
 
     QVector<double> yLinInc(LENGTH), yLinDec(LENGTH),
                     yExpInc(LENGTH), yExpDec(LENGTH),
                     yRandom(LENGTH), ySin(3*LENGTH),
-                    x(LENGTH), xSin(LENGTH);
+                    x(LENGTH),       xSin(LENGTH);
 
     double a = -1;
     double b = 1; // ?
@@ -82,11 +85,11 @@ void MainWindow::on_pushButton_clicked(){
     }
 
     for(int i=0; i<5; i++){
-        std::random_device rd;
-        std::mt19937 rng(rd());
-        std::uniform_int_distribution<int> uni(0,1000);
+        random_device rd;
+        mt19937 rng(rd());
+        uniform_int_distribution<int> uni(0,1000);
         int randomValue = uni(rng);
-        ySin[randomValue] = fuckUp(2); //спайки
+        ySin[randomValue] = shift(2); //спайки
     }
 
     ui->widget_6->addGraph();
@@ -97,7 +100,7 @@ void MainWindow::on_pushButton_clicked(){
     QThread::sleep(1);
 
 // ---------------- Рисование ----------------
-
+    auto foo = processing.antiShift(ySin);
     ui->widget->addGraph();
     ui->widget->graph(0)->setData(x, yLinInc);
     ui->widget->xAxis->setRange(0, LENGTH+1);
@@ -136,9 +139,7 @@ void MainWindow::on_pushButton_clicked(){
     ui->widget_6->clearGraphs();
 
 // --------------------------------------------------
-
-/*
- *  вычисление границ, может пригодиться
+/*  вычисление границ, может пригодиться
  *  minY = y[0];
  *  maxY = y[0];
  *  for(int i = 0; i<len; i++){
