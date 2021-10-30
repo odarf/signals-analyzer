@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>986</width>
-    <height>1127</height>
+    <width>1029</width>
+    <height>846</height>
    </rect>
   </property>
   <property name="tabletTracking">
@@ -20,111 +20,139 @@
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QCustomPlot" name="widget" native="true">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>291</width>
-      <height>201</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>890</x>
-      <y>670</y>
+      <x>940</x>
+      <y>780</y>
       <width>80</width>
-      <height>24</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>Plot</string>
     </property>
    </widget>
-   <widget class="QCustomPlot" name="widget_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>20</y>
-      <width>291</width>
-      <height>201</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QCustomPlot" name="widget_3" native="true">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>260</y>
-      <width>290</width>
-      <height>200</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QCustomPlot" name="widget_4" native="true">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>260</y>
-      <width>290</width>
-      <height>200</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QCustomPlot" name="widget_5" native="true">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>500</y>
-      <width>791</width>
-      <height>200</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="cbSelectTask">
-    <property name="geometry">
-     <rect>
-      <x>890</x>
-      <y>640</y>
-      <width>81</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>1</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>2</string>
-     </property>
-    </item>
-   </widget>
    <widget class="QDoubleSpinBox" name="sbCoeff">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>670</y>
-      <width>62</width>
-      <height>22</height>
+      <x>870</x>
+      <y>780</y>
+      <width>55</width>
+      <height>23</height>
      </rect>
     </property>
    </widget>
-   <widget class="QCustomPlot" name="widget_6" native="true">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>730</y>
-      <width>790</width>
-      <height>290</height>
+      <x>0</x>
+      <y>0</y>
+      <width>1024</width>
+      <height>768</height>
      </rect>
     </property>
+    <property name="currentIndex">
+     <number>2</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Task 1</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphLinInc" native="true">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphLinDec" native="true">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>10</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphExpInc" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>240</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphExpDec" native="true">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>240</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Task 2</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphEmbedRandom" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="widget_5" native="true">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>120</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Страница</string>
+     </attribute>
+     <widget class="QCustomPlot" name="widget_6" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>351</width>
+        <height>290</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="widget_7" native="true">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>150</y>
+        <width>301</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -132,8 +160,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>986</width>
-     <height>21</height>
+     <width>1029</width>
+     <height>20</height>
     </rect>
    </property>
   </widget>

@@ -39,6 +39,7 @@ float MainWindow::randomGenerator(float coeff){
     return distribution(engine);
 }
 
+// ---------------- Генератор спайков ----------------
 float MainWindow::shift(float n){
     return randomGenerator(n) * 1000.0;
 }
@@ -47,22 +48,21 @@ void MainWindow::on_pushButton_clicked(){
     //int selectedTask =  ui->cbSelectTask->currentText().toInt();
     processing processing;
 
-
     randomCoeff = (float)ui->sbCoeff->value();
-    cout << randomCoeff << endl;
 
     QVector<double> yLinInc(LENGTH), yLinDec(LENGTH),
                     yExpInc(LENGTH), yExpDec(LENGTH),
-                    yRandom(LENGTH), ySin(3*LENGTH),
-                    x(LENGTH),       xSin(LENGTH);
+                    yMyRandom(LENGTH), ySin(LENGTH),
+                    x(LENGTH),       xSin(LENGTH),
+                    yTemp(LENGTH),   ySmoothed(LENGTH),
+                    xTemp(LENGTH);
 
     double a = -1;
-    double b = 1; // ?
     double beta = 1;
     double alpha = -0.01;
     int amplitude[] = {10, 100, 15};
     int frequency[] = {4, 37, 173};
-    float delta_t = 0.001;
+    double delta_t = 0.001;
 
     for(int X=0; X<LENGTH-1; X++){
         x[X] = X;
@@ -71,7 +71,7 @@ void MainWindow::on_pushButton_clicked(){
         yLinDec[X] = a * X + LENGTH;
         yExpInc[X] = (double)(beta * exp(-alpha * X)); // определить
         yExpDec[X] = (double)(beta * exp(alpha * X));  // границы
-        yRandom[X] = randomGenerator(randomCoeff);
+        yMyRandom[X] = randomGenerator(randomCoeff);
         //ySin[X] = a_first * sin(2 * 3.14 * f_first * X * delta_t);
     }
 
@@ -92,6 +92,52 @@ void MainWindow::on_pushButton_clicked(){
         ySin[randomValue] = shift(2); //спайки
     }
 
+    int L = 10;
+    double sum = 0.0;
+    int k = 0;
+    for(int i = 0; i<LENGTH-1; i++){
+        xTemp[i] = i;
+        yTemp[i] = yLinDec[i];
+        yTemp[i] += randomGenerator(randomCoeff);
+    }
+    for(int m = 0; m<LENGTH-L; m++){
+        for(k = m; k<m+L-1; k++){
+            sum += yTemp[k];
+        }
+        ySmoothed[m] = sum / L;
+    }
+
+// ---------------- Рисование ----------------
+    ui->graphLinInc->addGraph();
+    ui->graphLinInc->graph(0)->setData(x, yLinInc);
+    ui->graphLinInc->xAxis->setRange(0, LENGTH+1);
+    ui->graphLinInc->yAxis->setRange(analysis::minValue(yLinInc), analysis::maxValue(yLinInc)+1);
+    ui->graphLinInc->replot();
+
+    ui->graphLinDec->addGraph();
+    ui->graphLinDec->graph(0)->setData(x, yLinDec);
+    ui->graphLinDec->xAxis->setRange(0, LENGTH+1);
+    ui->graphLinDec->yAxis->setRange(analysis::minValue(yLinDec), analysis::maxValue(yLinDec)+1);
+    ui->graphLinDec->replot();
+
+    ui->graphExpInc->addGraph();
+    ui->graphExpInc->graph(0)->setData(x, yExpInc);
+    ui->graphExpInc->xAxis->setRange(0, LENGTH+1);
+    ui->graphExpInc->yAxis->setRange(analysis::minValue(yExpInc), analysis::maxValue(yExpInc)+1);
+    ui->graphExpInc->replot();
+
+    ui->graphExpDec->addGraph();
+    ui->graphExpDec->graph(0)->setData(x, yExpDec);
+    ui->graphExpDec->xAxis->setRange(0, LENGTH+1);
+    ui->graphExpDec->yAxis->setRange(analysis::minValue(yExpDec), analysis::maxValue(yExpDec));
+    ui->graphExpDec->replot();
+
+    ui->widget_5->addGraph();
+    ui->widget_5->graph(0)->setData(x, yMyRandom);
+    ui->widget_5->xAxis->setRange(0, LENGTH+1);
+    ui->widget_5->yAxis->setRange(-randomCoeff-0.5, randomCoeff+0.5);
+    ui->widget_5->replot();
+
     ui->widget_6->addGraph();
     ui->widget_6->graph(0)->setData(xSin, ySin);
     ui->widget_6->xAxis->setRange(0, LENGTH);
@@ -99,53 +145,17 @@ void MainWindow::on_pushButton_clicked(){
     ui->widget_6->replot();
     QThread::sleep(1);
 
-// ---------------- Рисование ----------------
-    auto foo = processing.antiShift(ySin);
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(x, yLinInc);
-    ui->widget->xAxis->setRange(0, LENGTH+1);
-    ui->widget->yAxis->setRange(0, LENGTH+1);
-    ui->widget->replot();
+    ui->widget_7->addGraph();
+    ui->widget_7->graph(0)->setData(xTemp, ySmoothed);
+    ui->widget_7->xAxis->setRange(0, LENGTH);
+    ui->widget_7->yAxis->setRange(0, 1000);
+    ui->widget_7->replot();
 
-    ui->widget_2->addGraph();
-    ui->widget_2->graph(0)->setData(x, yLinDec);
-    ui->widget_2->xAxis->setRange(0, LENGTH+1);
-    ui->widget_2->yAxis->setRange(0, LENGTH+1);
-    ui->widget_2->replot();
-
-    ui->widget_3->addGraph();
-    ui->widget_3->graph(0)->setData(x, yExpInc);
-    ui->widget_3->xAxis->setRange(0, LENGTH+1);
-    ui->widget_3->yAxis->setRange(0, LENGTH+1);
-    ui->widget_3->replot();
-
-    ui->widget_4->addGraph();
-    ui->widget_4->graph(0)->setData(x, yExpDec);
-    ui->widget_4->xAxis->setRange(0, LENGTH+1); // определить границы
-    ui->widget_4->yAxis->setRange(0, LENGTH+1); // для у и х
-    ui->widget_4->replot();
-
-    ui->widget_5->addGraph();
-    ui->widget_5->graph(0)->setData(x, yRandom);
-    ui->widget_5->xAxis->setRange(0, LENGTH+1);
-    ui->widget_5->yAxis->setRange(-randomCoeff-0.5, randomCoeff+0.5);
-    ui->widget_5->replot();
-
-    ui->widget->clearGraphs();
-    ui->widget_2->clearGraphs();
-    ui->widget_3->clearGraphs();
-    ui->widget_4->clearGraphs();
+    ui->graphLinInc->clearGraphs();
+    ui->graphLinDec->clearGraphs();
+    ui->graphExpInc->clearGraphs();
+    ui->graphExpDec->clearGraphs();
     ui->widget_5->clearGraphs();
     ui->widget_6->clearGraphs();
-
-// --------------------------------------------------
-/*  вычисление границ, может пригодиться
- *  minY = y[0];
- *  maxY = y[0];
- *  for(int i = 0; i<len; i++){
- *      if (y[i]<minY) minY = y[i];
- *      if (y[i]>maxY) maxY = y[i];
- *  }
- *  ui->widget_2->yAxis->setRange(minY, maxY);
- */
+    ui->widget_7->clearGraphs();
 }

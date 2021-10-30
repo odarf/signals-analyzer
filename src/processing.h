@@ -10,7 +10,7 @@ class processing
 public:
     processing();
     QVector<double> antiShift(QVector<double>);
-    QVector<double> antiSpike();
+    QVector<double> antiSpike(QVector<double>);
 };
 
 #endif // PROCESSING_H

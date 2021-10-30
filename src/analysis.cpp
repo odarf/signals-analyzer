@@ -6,20 +6,23 @@
 
 analysis::analysis(){}
 
-QVector<float> analysis::minMax(QVector<float> x){
-    QVector<float> min_max(2);
-    min_max[0] = *std::min_element(x.constBegin(), x.constEnd());
-    min_max[1] = *std::max_element(x.constBegin(), x.constEnd());
-    return min_max;
+double analysis::minValue(QVector<double> x){
+    float min = *std::min_element(x.constBegin(), x.constEnd());
+    return min;
 }
 
-float analysis::averageValue(QVector<double> x){
+double analysis::maxValue(QVector<double> x){
+    float max = *std::max_element(x.constBegin(), x.constEnd());
+    return max;
+}
+
+double analysis::averageValue(QVector<double> x){
     float sum = 0.0;
     for (int i=0; i<x.length()-1; i++) { sum+=x[i]; }
     return sum/x.length();
 }
 
-float analysis::dispersion(QVector<double> x){
+double analysis::dispersion(QVector<double> x){
     float sum = 0.0;
     for (int i=0; i<x.length()-1; i++)
     { sum+=pow(x[i] - averageValue(x), 2); }
