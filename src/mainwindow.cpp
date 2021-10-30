@@ -30,7 +30,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// ---------------- Генератор случайных чисел ----------------
+float MainWindow::embedRandom(){
+    float value = 0;
+    int max = 1;
+    int min = -1;
+    int c = 1;
+    value = rand() * (c * max - c * min) + c * min;
+    return value;
+}
+
+// ---------------- Мой генератор случайных чисел ----------------
 float MainWindow::randomGenerator(float coeff){
     float left = -1.0 * coeff;
     float right = 1.0 * coeff;
@@ -47,15 +56,18 @@ float MainWindow::shift(float n){
 void MainWindow::on_pushButton_clicked(){
     //int selectedTask =  ui->cbSelectTask->currentText().toInt();
     processing processing;
+    analysis analysis;
+
+    cout << embedRandom() << endl;
 
     randomCoeff = (float)ui->sbCoeff->value();
 
     QVector<double> yLinInc(LENGTH), yLinDec(LENGTH),
                     yExpInc(LENGTH), yExpDec(LENGTH),
-                    yMyRandom(LENGTH), ySin(LENGTH),
-                    x(LENGTH),       xSin(LENGTH),
-                    yTemp(LENGTH),   ySmoothed(LENGTH),
-                    xTemp(LENGTH);
+                    ySin(LENGTH),    yMyRandom(LENGTH),
+                    yTemp(LENGTH),   yEmbedRandom(LENGTH),
+                    x(LENGTH),       ySmoothed(LENGTH),
+                    xSin(LENGTH),    xTemp(LENGTH);
 
     double a = -1;
     double beta = 1;
@@ -69,9 +81,10 @@ void MainWindow::on_pushButton_clicked(){
 
         yLinInc[X] = -a * X;
         yLinDec[X] = a * X + LENGTH;
-        yExpInc[X] = (double)(beta * exp(-alpha * X)); // определить
-        yExpDec[X] = (double)(beta * exp(alpha * X));  // границы
+        yExpInc[X] = (double)(beta * exp(-alpha * X));
+        yExpDec[X] = (double)(beta * exp(alpha * X));
         yMyRandom[X] = randomGenerator(randomCoeff);
+        yEmbedRandom[X] = embedRandom();
         //ySin[X] = a_first * sin(2 * 3.14 * f_first * X * delta_t);
     }
 
@@ -111,32 +124,38 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphLinInc->addGraph();
     ui->graphLinInc->graph(0)->setData(x, yLinInc);
     ui->graphLinInc->xAxis->setRange(0, LENGTH+1);
-    ui->graphLinInc->yAxis->setRange(analysis::minValue(yLinInc), analysis::maxValue(yLinInc)+1);
+    ui->graphLinInc->yAxis->setRange(analysis.minValue(yLinInc), analysis.maxValue(yLinInc)+1);
     ui->graphLinInc->replot();
 
     ui->graphLinDec->addGraph();
     ui->graphLinDec->graph(0)->setData(x, yLinDec);
     ui->graphLinDec->xAxis->setRange(0, LENGTH+1);
-    ui->graphLinDec->yAxis->setRange(analysis::minValue(yLinDec), analysis::maxValue(yLinDec)+1);
+    ui->graphLinDec->yAxis->setRange(analysis.minValue(yLinDec), analysis.maxValue(yLinDec)+1);
     ui->graphLinDec->replot();
 
     ui->graphExpInc->addGraph();
     ui->graphExpInc->graph(0)->setData(x, yExpInc);
     ui->graphExpInc->xAxis->setRange(0, LENGTH+1);
-    ui->graphExpInc->yAxis->setRange(analysis::minValue(yExpInc), analysis::maxValue(yExpInc)+1);
+    ui->graphExpInc->yAxis->setRange(analysis.minValue(yExpInc), analysis.maxValue(yExpInc)+1);
     ui->graphExpInc->replot();
 
     ui->graphExpDec->addGraph();
     ui->graphExpDec->graph(0)->setData(x, yExpDec);
     ui->graphExpDec->xAxis->setRange(0, LENGTH+1);
-    ui->graphExpDec->yAxis->setRange(analysis::minValue(yExpDec), analysis::maxValue(yExpDec));
+    ui->graphExpDec->yAxis->setRange(analysis.minValue(yExpDec), analysis.maxValue(yExpDec));
     ui->graphExpDec->replot();
 
-    ui->widget_5->addGraph();
-    ui->widget_5->graph(0)->setData(x, yMyRandom);
-    ui->widget_5->xAxis->setRange(0, LENGTH+1);
-    ui->widget_5->yAxis->setRange(-randomCoeff-0.5, randomCoeff+0.5);
-    ui->widget_5->replot();
+    ui->graphMyRandom->addGraph();
+    ui->graphMyRandom->graph(0)->setData(x, yMyRandom);
+    ui->graphMyRandom->xAxis->setRange(0, LENGTH+1);
+    ui->graphMyRandom->yAxis->setRange(-randomCoeff-0.5, randomCoeff+0.5);
+    ui->graphMyRandom->replot();
+
+    ui->graphEmbedRandom->addGraph();
+    ui->graphEmbedRandom->graph(0)->setData(x, yEmbedRandom);
+    ui->graphEmbedRandom->xAxis->setRange(0, LENGTH+1);
+    ui->graphEmbedRandom->yAxis->setRange(analysis.minValue(yEmbedRandom), analysis.maxValue(yEmbedRandom));
+    ui->graphEmbedRandom->replot();
 
     ui->widget_6->addGraph();
     ui->widget_6->graph(0)->setData(xSin, ySin);
@@ -155,7 +174,7 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphLinDec->clearGraphs();
     ui->graphExpInc->clearGraphs();
     ui->graphExpDec->clearGraphs();
-    ui->widget_5->clearGraphs();
+    ui->graphMyRandom->clearGraphs();
     ui->widget_6->clearGraphs();
     ui->widget_7->clearGraphs();
 }
