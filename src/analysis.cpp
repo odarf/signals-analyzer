@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <math.h>
+#include <QDebug>
 
 analysis::analysis(){}
 
@@ -63,8 +64,38 @@ double analysis::curtosis(QVector<double> x){
     return excess(x) / (pow(standartDeviation(x), 4) - 3);
 }
 
-bool analysis::stationarity(QVector<double> x){
-    return true; //дописать!
+bool analysis::isStationary(QVector<double> x){
+    int m = 1000;
+    int e = 10;
+    int n = x.length();
+    QVector<double> mArr;
+    QVector<double> dArr;
+    double mean = 0;
+    double dispersion = 0;
+    double avg = 0;
+    double d = 0;
+
+    for(int i = 0; i<m; i++){
+        for(int k = i * (n/m); k < i*n/m+n/m; k++){
+            mean = x[k] + mean;
+        }
+        avg = mean / n;
+        mArr.append(avg);
+
+        for(int k = i*m; k<i*n/m+n/m; k++){
+            dispersion += pow((x[k] - avg), 2);
+        }
+        d = dispersion / n;
+        dArr.append(d);
+
+        for(int j = 0; j<i-1; j++){
+            if(i != 0){
+                return (std::max(mArr[i], mArr[j]) - std::min(mArr[i], mArr[j]) / std::max(mArr[i], mArr[j]) * 100 > e) ? false :  NULL;
+                return (std::max(dArr[i], dArr[j]) - std::min(dArr[i], dArr[j]) / std::max(dArr[i], dArr[j]) * 100 > e) ? false : NULL;
+            }
+        }
+    }
+    return true;
 }
 
 QVector<double> analysis::autocovariance(QVector<double> x){

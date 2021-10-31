@@ -19,7 +19,7 @@ public:
     double assymetryCoeff(QVector<double>);
     double excess(QVector<double>);
     double curtosis(QVector<double>);
-    bool stationarity(QVector<double>);
+    bool isStationary(QVector<double>);
     QVector<double> autocovariance(QVector<double>);
     QVector<double> covariance(QVector<double>, QVector<double>);
     QVector<double> density(QVector<double>);

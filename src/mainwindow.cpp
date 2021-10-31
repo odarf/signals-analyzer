@@ -64,8 +64,9 @@ void MainWindow::on_pushButton_clicked(){
 
     QVector<double> yLinInc(LENGTH), yLinDec(LENGTH),
                     yExpInc(LENGTH), yExpDec(LENGTH),
-                    ySin(LENGTH),    yMyRandom(LENGTH),
+                    ySinMod(LENGTH), yMyRandom(LENGTH),
                     yTemp(LENGTH),   yEmbedRandom(LENGTH),
+                    ySin(LENGTH),
                     x(LENGTH),       ySmoothed(LENGTH),
                     xSin(LENGTH),    xTemp(LENGTH);
 
@@ -85,14 +86,14 @@ void MainWindow::on_pushButton_clicked(){
         yExpDec[X] = (double)(beta * exp(alpha * X));
         yMyRandom[X] = randomGenerator(randomCoeff);
         yEmbedRandom[X] = embedRandom();
-        //ySin[X] = a_first * sin(2 * 3.14 * f_first * X * delta_t);
+        ySin[X] = amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t);
     }
 
     for(int count=0; count<3; count++){
         for(int i=0; i<5; i++){
             for(int X=0; X<LENGTH-1; X++){
                 xSin[X] = X;
-                ySin[X] += amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t) + DELTA; //график со смещением с одним значением амплитуды и частоты
+                ySinMod[X] += amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t) + DELTA; //график со смещением с одним значением амплитуды и частоты
             }
         }
     }
@@ -102,7 +103,7 @@ void MainWindow::on_pushButton_clicked(){
         mt19937 rng(rd());
         uniform_int_distribution<int> uni(0,1000);
         int randomValue = uni(rng);
-        ySin[randomValue] = shift(2); //спайки
+        ySinMod[randomValue] = shift(2); //спайки
     }
 
     int L = 10;
@@ -158,11 +159,29 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphEmbedRandom->replot();
 
     ui->widget_6->addGraph();
-    ui->widget_6->graph(0)->setData(xSin, ySin);
+    ui->widget_6->graph(0)->setData(xSin, ySinMod);
     ui->widget_6->xAxis->setRange(0, LENGTH);
     ui->widget_6->yAxis->setRange(-2500, 2500);
     ui->widget_6->replot();
     QThread::sleep(1);
+
+    ui->graphHarmonicSin->addGraph();
+    ui->graphHarmonicSin->graph(0)->setData(xSin, ySin);
+    ui->graphHarmonicSin->xAxis->setRange(0, LENGTH);
+    ui->graphHarmonicSin->yAxis->setRange(analysis.minValue(ySin) - 1, analysis.maxValue(ySin) + 1);
+    ui->graphHarmonicSin->replot();
+//-------------------- Статистики для гармонического графика ---------------------------
+    ui->labelMinimumValue->setText(QString::number(analysis.minValue(ySin)));
+    ui->labelMaximumValue->setText(QString::number(analysis.maxValue(ySin)));
+    ui->labelMeanValue->setText(QString::number(analysis.mean(ySin)));
+    ui->labelDispersionValue->setText(QString::number(analysis.dispersion(ySin)));
+    ui->labelStdDevValue->setText(QString::number(analysis.standartDeviation(ySin)));
+    ui->labelSqrtDevValue->setText(QString::number(analysis.sqrtDeviation(ySin)));
+    ui->labelAssymetryValue->setText(QString::number(analysis.assymetry(ySin)));
+    ui->labelAssymetryCoeffValue->setText(QString::number(analysis.assymetryCoeff(ySin)));
+    ui->labelExcessValue->setText(QString::number(analysis.excess(ySin)));
+    ui->labelCurtosisValue->setText(QString::number(analysis.curtosis(ySin)));
+    ui->labelIsStationarity->setText(analysis.isStationary(ySin) ? "Стационарен" : "Не стационарен");
 
     ui->widget_7->addGraph();
     ui->widget_7->graph(0)->setData(xTemp, ySmoothed);
