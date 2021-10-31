@@ -14,7 +14,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>поставьте 4 автоматом пожалуйста</string>
   </property>
   <property name="animated">
    <bool>true</bool>
@@ -53,7 +53,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -97,8 +97,18 @@
        <rect>
         <x>550</x>
         <y>400</y>
-        <width>450</width>
-        <height>330</height>
+        <width>225</width>
+        <height>165</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphCombinated" native="true">
+      <property name="geometry">
+       <rect>
+        <x>776</x>
+        <y>566</y>
+        <width>225</width>
+        <height>165</height>
        </rect>
       </property>
      </widget>

@@ -8,6 +8,7 @@
 #include <QValueAxis>
 #include <QChart>
 #include <QChartView>
+#include <QtCharts>
 
 #include <math.h>
 #include <time.h>
@@ -66,7 +67,8 @@ void MainWindow::on_pushButton_clicked(){
                     yExpInc(LENGTH), yExpDec(LENGTH),
                     ySinMod(LENGTH), yMyRandom(LENGTH),
                     yTemp(LENGTH),   yEmbedRandom(LENGTH),
-                    ySin(LENGTH),
+                    ySin(LENGTH),    yCombinated,
+                    xLarge(3*LENGTH),
                     x(LENGTH),       ySmoothed(LENGTH),
                     xSin(LENGTH),    xTemp(LENGTH);
 
@@ -88,6 +90,13 @@ void MainWindow::on_pushButton_clicked(){
         yEmbedRandom[X] = embedRandom();
         ySin[X] = amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t);
     }
+
+    for(int i = 0; i<3000; i++){
+        xLarge[i] = i;
+    }
+    yCombinated.append(yLinInc);
+    yCombinated.append(yLinDec);
+    yCombinated.append(yExpInc);
 
     for(int count=0; count<3; count++){
         for(int i=0; i<5; i++){
@@ -146,6 +155,12 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphExpDec->yAxis->setRange(analysis.minValue(yExpDec), analysis.maxValue(yExpDec));
     ui->graphExpDec->replot();
 
+    ui->graphCombinated->addGraph();
+    ui->graphCombinated->graph(0)->setData(xLarge, yCombinated);
+    ui->graphCombinated->xAxis->setRange(0, 3*LENGTH);
+    ui->graphCombinated->yAxis->setRange(0, 3000);
+    ui->graphCombinated->replot();
+
     ui->graphMyRandom->addGraph();
     ui->graphMyRandom->graph(0)->setData(x, yMyRandom);
     ui->graphMyRandom->xAxis->setRange(0, LENGTH+1);
@@ -181,7 +196,7 @@ void MainWindow::on_pushButton_clicked(){
     ui->labelAssymetryCoeffValue->setText(QString::number(analysis.assymetryCoeff(ySin)));
     ui->labelExcessValue->setText(QString::number(analysis.excess(ySin)));
     ui->labelCurtosisValue->setText(QString::number(analysis.curtosis(ySin)));
-    ui->labelIsStationarity->setText(analysis.isStationary(ySin) ? "Стационарен" : "Не стационарен");
+    //ui->labelIsStationarity->setText(analysis.isStationary(ySin) ? "Стационарен" : "Не стационарен");
 
     ui->widget_7->addGraph();
     ui->widget_7->graph(0)->setData(xTemp, ySmoothed);

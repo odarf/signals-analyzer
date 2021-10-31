@@ -8,12 +8,12 @@
 analysis::analysis(){}
 
 double analysis::minValue(QVector<double> x){
-    float min = *std::min_element(x.constBegin(), x.constEnd());
+    double min = *std::min_element(x.constBegin(), x.constEnd());
     return min;
 }
 
 double analysis::maxValue(QVector<double> x){
-    float max = *std::max_element(x.constBegin(), x.constEnd());
+    double max = *std::max_element(x.constBegin(), x.constEnd());
     return max;
 }
 
@@ -73,7 +73,6 @@ bool analysis::isStationary(QVector<double> x){
     double mean = 0;
     double dispersion = 0;
     double avg = 0;
-    double d = 0;
 
     for(int i = 0; i<m; i++){
         for(int k = i * (n/m); k < i*n/m+n/m; k++){
@@ -85,8 +84,7 @@ bool analysis::isStationary(QVector<double> x){
         for(int k = i*m; k<i*n/m+n/m; k++){
             dispersion += pow((x[k] - avg), 2);
         }
-        d = dispersion / n;
-        dArr.append(d);
+        dArr.append(dispersion / n);
 
         for(int j = 0; j<i-1; j++){
             if(i != 0){
@@ -134,6 +132,10 @@ QVector<double> analysis::covariance(QVector<double> x, QVector<double> y){
 }
 
 /*QVector<double> analysis::density(QVector<double> x){
+    int m = 20;
+    QVector<double> density;
+
+
     //дописать!
 
 }*/
