@@ -104,14 +104,14 @@ bool analysis::isStationary(QVector<double> x){
 
 QVector<double> analysis::autocovariance(QVector<double> x){
     double avg = mean(x);
-    double n = x.length();
+    int n = x.length();
     QVector<double> autocovariance;
 
     for(int i = 0; i<n; i++){
         double sum1 = 0;
         double sum2 = 0;
-        for(int j = 0; j<n; j++){
-            sum1 += (x[j] - avg) * (x[j+1] - avg);
+        for(int j = 0; j<n-i; j++){
+            sum1 += (x[j] - avg) * (x[j+i] - avg);
         }
         for(int k = 0; k<n; k++){
             sum2 += pow((x[k] - avg), 2);
@@ -121,16 +121,16 @@ QVector<double> analysis::autocovariance(QVector<double> x){
     return autocovariance;
 }
 
-QVector<double> analysis::covariance(QVector<double> x, QVector<double> y){
-    double avgX = mean(x);
-    double avgY = mean(y);
-    int n = x.length();
+QVector<double> analysis::covariance(QVector<double> firstProcess, QVector<double> secondProcess){
+    double avgX = mean(firstProcess);
+    double avgY = mean(secondProcess);
+    int n = firstProcess.length();
     QVector<double> covariance;
 
     for(int i = 0; i<n; i++){
         double sum = 0;
         for(int j = 0; j<n-i; j++){
-            sum += (x[j] - avgX) * (y[j + i] - avgY);
+            sum += (firstProcess[j] - avgX) * (secondProcess[j + i] - avgY);
         }
         covariance.append(sum/n);
     }

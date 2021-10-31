@@ -4,6 +4,7 @@
 #include "processing.h"
 #include "analysis.h"
 #include <QMainWindow>
+#include <QtWidgets>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
