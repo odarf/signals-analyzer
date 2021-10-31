@@ -196,7 +196,7 @@ void MainWindow::on_pushButton_clicked(){
     ui->labelAssymetryCoeffValue->setText(QString::number(analysis.assymetryCoeff(ySin)));
     ui->labelExcessValue->setText(QString::number(analysis.excess(ySin)));
     ui->labelCurtosisValue->setText(QString::number(analysis.curtosis(ySin)));
-    //ui->labelIsStationarity->setText(analysis.isStationary(ySin) ? "Стационарен" : "Не стационарен");
+    ui->labelIsStationarity->setText(analysis.isStationary(yEmbedRandom) ? "Стационарен" : "Не стационарен");
 
     ui->widget_7->addGraph();
     ui->widget_7->graph(0)->setData(xTemp, ySmoothed);

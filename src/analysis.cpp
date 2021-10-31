@@ -76,7 +76,7 @@ bool analysis::isStationary(QVector<double> x){
 
     for(int i = 0; i<m; i++){
         for(int k = i * (n/m); k < i*n/m+n/m; k++){
-            mean = x[k] + mean;
+            mean += x[k];
         }
         avg = mean / n;
         mArr.append(avg);
@@ -88,8 +88,14 @@ bool analysis::isStationary(QVector<double> x){
 
         for(int j = 0; j<i-1; j++){
             if(i != 0){
-                return (std::max(mArr[i], mArr[j]) - std::min(mArr[i], mArr[j]) / std::max(mArr[i], mArr[j]) * 100 > e) ? false :  NULL;
-                return (std::max(dArr[i], dArr[j]) - std::min(dArr[i], dArr[j]) / std::max(dArr[i], dArr[j]) * 100 > e) ? false : NULL;
+                if(std::max(mArr[i], mArr[j]) - std::min(mArr[i], mArr[j]) / std::max(mArr[i], mArr[j]) * 100 > e){
+                    return false;
+                }
+                if(std::max(dArr[i], dArr[j]) - std::min(dArr[i], dArr[j]) / std::max(dArr[i], dArr[j]) * 100 > e){
+                    return false;
+                }
+                //return (std::max(mArr[i], mArr[j]) - std::min(mArr[i], mArr[j]) / std::max(mArr[i], mArr[j]) * 100 > e) ? false : NULL;
+                //return (std::max(dArr[i], dArr[j]) - std::min(dArr[i], dArr[j]) / std::max(dArr[i], dArr[j]) * 100 > e) ? false : NULL;
             }
         }
     }
