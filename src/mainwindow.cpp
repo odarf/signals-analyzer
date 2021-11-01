@@ -13,6 +13,7 @@
 #include <QtWidgets>
 #include <QtWidgets/QHBoxLayout>
 #include <QHBoxLayout>
+#include <cstdlib>
 
 #include <math.h>
 #include <time.h>
@@ -35,12 +36,13 @@ MainWindow::~MainWindow()
 }
 
 float MainWindow::embedRandom(){
-    float value = 0;
+    //float value = 0;
     int max = 1;
     int min = -1;
-    int c = 1;
-    value = rand() * (c * max - c * min) + c * min;
-    return value;
+    //int c = 1;
+    //QRandomGenerator *rnd = QRandomGenerator::global();
+    //value = rnd->bounded(min, max) * (c * max - c * min) + c * min;
+    return static_cast<float>(rand() * (1.0 / (static_cast<float>(RAND_MAX) + 1.0)) * (max - min) + min);
 }
 
 // ---------------- Мой генератор случайных чисел ----------------
@@ -98,7 +100,7 @@ void MainWindow::on_pushButton_clicked(){
     for(int count=0; count<3; count++){
         for(int i=0; i<5; i++){
             for(int X=0; X<LENGTH; X++){
-                ySinMod[X] += amplitude[count] * sin(2 * 3.14 * frequency[count] * X * delta_t) + DELTA; //график со смещением с одним значением амплитуды и частоты
+                ySinMod[X] += amplitude[count] * sin(2 * 3.14 * frequency[count] * X);// * delta_t) + DELTA; //график со смещением с одним значением амплитуды и частоты
             }
         }
     }
@@ -202,14 +204,14 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphCovar->addGraph();
     ui->graphCovar->graph(0)->setData(x, analysis.covariance(yEmbedRandom1, yEmbedRandom2));
     ui->graphCovar->xAxis->setRange(0, LENGTH);
-    ui->graphCovar->yAxis->setRange(analysis.minValue(analysis.covariance(yEmbedRandom1, yEmbedRandom2)) - 1, analysis.maxValue(analysis.covariance(yEmbedRandom1, yEmbedRandom2)) + 1);
+    ui->graphCovar->yAxis->setRange(analysis.minValue(analysis.covariance(yEmbedRandom1, yEmbedRandom2)), analysis.maxValue(analysis.covariance(yEmbedRandom1, yEmbedRandom2)));
     ui->graphCovar->replot();
 
-    ui->graphAutocovar->addGraph();
-    ui->graphAutocovar->graph(0)->setData(x, analysis.autocovariance(yEmbedRandom1));
-    ui->graphAutocovar->xAxis->setRange(0, LENGTH);
-    ui->graphAutocovar->yAxis->setRange(analysis.minValue(analysis.autocovariance(yEmbedRandom1)), 0.2);
-    ui->graphAutocovar->replot();
+    ui->graphAutocorr->addGraph();
+    ui->graphAutocorr->graph(0)->setData(x, analysis.autocovariance(yEmbedRandom1));
+    ui->graphAutocorr->xAxis->setRange(0, LENGTH);
+    ui->graphAutocorr->yAxis->setRange(analysis.minValue(analysis.autocovariance(yEmbedRandom1)), 0.2);
+    ui->graphAutocorr->replot();
 
     QBarSet *barSet = new QBarSet("");
     QBarSeries *series = new QBarSeries();
@@ -252,11 +254,74 @@ void MainWindow::on_pushButton_clicked(){
 // ----------------------------------------
 
 // ---------------- Task 5 ----------------
-    ui->graphTaskFiveSinMod->addGraph();
-    ui->graphTaskFiveSinMod->graph(0)->setData(x, ySinMod);
-    ui->graphTaskFiveSinMod->xAxis->setRange(0, LENGTH);
-    ui->graphTaskFiveSinMod->yAxis->setRange(analysis.minValue(ySinMod)-1, analysis.maxValue(ySinMod)+1);
-    ui->graphTaskFiveSinMod->replot();
+    ui->graphTaskFiveHarmo->addGraph();
+    ui->graphTaskFiveHarmo->graph(0)->setData(x, ySin);
+    ui->graphTaskFiveHarmo->xAxis->setRange(0, LENGTH);
+    ui->graphTaskFiveHarmo->yAxis->setRange(analysis.minValue(ySin)-1, analysis.maxValue(ySin)+1);
+    ui->graphTaskFiveHarmo->replot();
+
+    ui->graphTaskFivePolyharmo->addGraph();
+    ui->graphTaskFivePolyharmo->graph(0)->setData(x, ySinMod);
+    ui->graphTaskFivePolyharmo->xAxis->setRange(0, LENGTH);
+    ui->graphTaskFivePolyharmo->yAxis->setRange(analysis.minValue(ySinMod)-1, analysis.maxValue(ySinMod)+1);
+    ui->graphTaskFivePolyharmo->replot();
+
+    ui->graphTaskFiveHarmoAutocorr->addGraph();
+    ui->graphTaskFiveHarmoAutocorr->graph(0)->setData(x, analysis.autocovariance(ySin));
+    ui->graphTaskFiveHarmoAutocorr->xAxis->setRange(0, LENGTH);
+    ui->graphTaskFiveHarmoAutocorr->yAxis->setRange(analysis.minValue(analysis.autocovariance(ySin))-1, analysis.maxValue(analysis.autocovariance(ySin))+1);
+    ui->graphTaskFiveHarmoAutocorr->replot();
+
+    ui->graphTaskFivePolyAutocorr->addGraph();
+    ui->graphTaskFivePolyAutocorr->graph(0)->setData(x, analysis.autocovariance(ySinMod));
+    ui->graphTaskFivePolyAutocorr->xAxis->setRange(0, LENGTH);
+    ui->graphTaskFivePolyAutocorr->yAxis->setRange(analysis.minValue(analysis.autocovariance(ySinMod))-1, analysis.maxValue(analysis.autocovariance(ySinMod))+1);
+    ui->graphTaskFivePolyAutocorr->replot();
+
+    ui->graphTaskFiveCrosscorr->addGraph();
+    ui->graphTaskFiveCrosscorr->graph(0)->setData(x, analysis.covariance(ySin, ySinMod));
+    ui->graphTaskFiveCrosscorr->xAxis->setRange(0, LENGTH);
+    ui->graphTaskFiveCrosscorr->yAxis->setRange(analysis.minValue(analysis.covariance(ySin, ySinMod))-1, analysis.maxValue(analysis.covariance(ySin, ySinMod))+1);
+    ui->graphTaskFiveCrosscorr->replot();
+
+    QBarSet *barSet2 = new QBarSet("");
+    QBarSeries *series2 = new QBarSeries();
+    M = 20;
+    QVector<double> hist2(20);
+    kHist = analysis.minValue(ySin);
+    shag = (qAbs(analysis.minValue(ySin)) + analysis.maxValue(ySin))/M;
+
+    //0..20, 20..40, 40..60, 60..80, 80..100, ... гистограмма
+    for(int i = 0; i<M; i++){
+        for(int j = 0; j<ySin.length(); j++){
+            if(ySin[j] >= kHist && ySin[j] <= (kHist+shag)){
+                hist2[i] = hist2[i] + 1;
+            }
+        }
+        kHist += shag;
+        *barSet2 << hist2[i];
+    }
+
+    series2->append(barSet2);
+    QChart *chart2 = new QChart();
+    QValueAxis *axisY2 = new QValueAxis();
+    QValueAxis *axisX2 = new QValueAxis();
+    axisY2->setRange(0, round(analysis.maxValue(hist2)));
+    axisX2->setRange(0, analysis.maxValue(ySin));
+    axisX2->setTickCount(M);
+    axisX2->setTickInterval(shag);
+    chart2->addAxis(axisY2, Qt::AlignLeft);
+    chart2->addAxis(axisX2, Qt::AlignBottom);
+    chart2->legend()->setVisible(false);
+    series2->attachAxis(axisY2);
+    series2->attachAxis(axisX2);
+    chart2->addSeries(series2);
+    chart2->setAnimationOptions(QChart::SeriesAnimations);
+    QChartView *chartView2 = new QChartView(chart2);
+    chartView2->setRenderHint(QPainter::Antialiasing);
+    ui->graphTaskFiveDensity->setContentsMargins(0,0,0,0);
+    QHBoxLayout *lay2 = new QHBoxLayout(ui->graphTaskFiveDensity);
+    lay2->addWidget(chartView2);
     //QThread::sleep(1);
 // ----------------------------------------
 
@@ -322,7 +387,7 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphTaskSevenSpiked->graph(0)->setData(x, spiked);
     ui->graphTaskSevenSpiked->xAxis->setRange(0, LENGTH);
     //ui->graphTaskSevenSpiked->yAxis->setRange(analysis.minValue(spiked)-1, analysis.maxValue(spiked)+1);
-    ui->graphTaskSevenSpiked->yAxis->setRange(-11, 11);
+    ui->graphTaskSevenSpiked->yAxis->setRange(-100, 100);
     ui->graphTaskSevenSpiked->replot();
 
     QVector<double> antispiked = processing.antiSpike(spiked);
@@ -330,18 +395,44 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphTaskSevenAntiSpiked->addGraph();
     ui->graphTaskSevenAntiSpiked->graph(0)->setData(x, antispiked);
     ui->graphTaskSevenAntiSpiked->xAxis->setRange(0, LENGTH);
-    ui->graphTaskSevenAntiSpiked->yAxis->setRange(analysis.minValue(antispiked)-1, analysis.maxValue(antispiked)+1);
+    ui->graphTaskSevenAntiSpiked->yAxis->setRange(-100, 100);
     ui->graphTaskSevenAntiSpiked->replot();
 
 
 // ----------------------------------------
 
-    ui->widget_7->addGraph();
-    ui->widget_7->graph(0)->setData(xTemp, ySmoothed);
-    ui->widget_7->xAxis->setRange(0, LENGTH);
-    ui->widget_7->yAxis->setRange(0, 1000);
-    ui->widget_7->replot();
+// ---------------- Task 8 ----------------
+    QVector<double> trAdRa = processing.trendAddRandom(ySin);
+    QVector<double> pot = processing.pickoutTrend(trAdRa);
+    QVector<double> antr = processing.antiTrend(trAdRa);
 
+    ui->graphTaskEightTrendAdd->addGraph();
+    ui->graphTaskEightTrendAdd->graph(0)->setData(x, trAdRa);
+    ui->graphTaskEightTrendAdd->xAxis->setRange(0, LENGTH);
+    ui->graphTaskEightTrendAdd->yAxis->setRange(analysis.minValue(trAdRa)-1, analysis.maxValue(trAdRa)+1);
+    ui->graphTaskEightTrendAdd->replot();
+
+    ui->graphTaskEightPickTrend->addGraph();
+    ui->graphTaskEightPickTrend->graph(0)->setData(x, pot);
+    ui->graphTaskEightPickTrend->xAxis->setRange(0, LENGTH);
+    ui->graphTaskEightPickTrend->yAxis->setRange(analysis.minValue(pot)-1, analysis.maxValue(pot)+1);
+    ui->graphTaskEightPickTrend->replot();
+
+    ui->graphTaskEightAntiTrend->addGraph();
+    ui->graphTaskEightAntiTrend->graph(0)->setData(x, antr);
+    ui->graphTaskEightAntiTrend->xAxis->setRange(0, LENGTH);
+    ui->graphTaskEightAntiTrend->yAxis->setRange(analysis.minValue(antr)-1, analysis.maxValue(antr)+1);
+    ui->graphTaskEightAntiTrend->replot();
+
+    QVector<double> stdDev = processing.pdfTaskEight(antr);
+
+    ui->graphTaskEightStdDev->addGraph();
+    ui->graphTaskEightStdDev->graph(0)->setData(x, stdDev);
+    ui->graphTaskEightStdDev->xAxis->setRange(0, LENGTH);
+    ui->graphTaskEightStdDev->yAxis->setRange(analysis.minValue(stdDev)-1, analysis.maxValue(stdDev)+1);
+    ui->graphTaskEightStdDev->replot();
+
+// ----------------------------------------
 
 // ---------- Очистка графиков ----------
     ui->graphLinInc->clearGraphs();
@@ -355,8 +446,12 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphTaskFourRandom1->clearGraphs();
     ui->graphTaskFourRandom2->clearGraphs();
     ui->graphCovar->clearGraphs();
-    ui->graphAutocovar->clearGraphs();
-    ui->graphTaskFiveSinMod->clearGraphs();
+    ui->graphAutocorr->clearGraphs();
+    ui->graphTaskFiveHarmo->clearGraphs();
+    ui->graphTaskFivePolyharmo->clearGraphs();
+    ui->graphTaskFiveHarmoAutocorr->clearGraphs();
+    ui->graphTaskFivePolyAutocorr->clearGraphs();
+    ui->graphTaskFiveCrosscorr->clearGraphs();
     ui->graphTaskSixOrig1->clearGraphs();
     ui->graphTaskSixShifted1->clearGraphs();
     ui->graphTaskSixOrig2->clearGraphs();

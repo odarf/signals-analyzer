@@ -21,6 +21,10 @@ public:
     QVector<double> aim(QVector<double>);
     QVector<double> antiShift(QVector<double>);
     QVector<double> antiSpike(QVector<double>);
+    QVector<double> pickoutTrend(QVector<double>);
+    QVector<double> trendAddRandom(QVector<double>);
+    QVector<double> antiTrend(QVector<double>);
+    QVector<double> pdfTaskEight(QVector<double>);
 };
 
 #endif // PROCESSING_H
