@@ -402,7 +402,7 @@ void MainWindow::on_pushButton_clicked(){
 // ----------------------------------------
 
 // ---------------- Task 8 ----------------
-    QVector<double> trAdRa = processing.trendAddRandom(ySin);
+    QVector<double> trAdRa = processing.trendAddRandom(yLinInc);
     QVector<double> pot = processing.pickoutTrend(trAdRa);
     QVector<double> antr = processing.antiTrend(trAdRa);
 
@@ -424,13 +424,54 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphTaskEightAntiTrend->yAxis->setRange(analysis.minValue(antr)-1, analysis.maxValue(antr)+1);
     ui->graphTaskEightAntiTrend->replot();
 
-    QVector<double> stdDev = processing.pdfTaskEight(antr);
+    QVector<double> stdDev = processing.pdfTaskEight();
 
     ui->graphTaskEightStdDev->addGraph();
     ui->graphTaskEightStdDev->graph(0)->setData(x, stdDev);
-    ui->graphTaskEightStdDev->xAxis->setRange(0, LENGTH);
-    ui->graphTaskEightStdDev->yAxis->setRange(analysis.minValue(stdDev)-1, analysis.maxValue(stdDev)+1);
+    ui->graphTaskEightStdDev->xAxis->setRange(0, stdDev.length()-1);
+    ui->graphTaskEightStdDev->yAxis->setRange(0, analysis.maxValue(stdDev)+0.05);
     ui->graphTaskEightStdDev->replot();
+
+    QVector<double> stdDevDiv = processing.pdfTaskEight2(stdDev);
+
+    ui->graphTaskEightStdDev_2->addGraph();
+    ui->graphTaskEightStdDev_2->graph(0)->setData(x, stdDevDiv);
+    ui->graphTaskEightStdDev_2->xAxis->setRange(0, stdDevDiv.length()-1);
+    ui->graphTaskEightStdDev_2->yAxis->setRange(analysis.minValue(stdDevDiv)-0.5, analysis.maxValue(stdDevDiv)+0.5);
+    ui->graphTaskEightStdDev_2->replot();
+
+// ----------------------------------------
+
+// ---------------- Task 8 ----------------
+    QVector<double> taskNine1 = processing.pdfTaskNine(ySin, 1);
+    QVector<double> taskNine10 = processing.pdfTaskNine(ySin, 10);
+    QVector<double> taskNine100 = processing.pdfTaskNine(ySin, 100);
+    QVector<double> taskNine1000 = processing.pdfTaskNine(ySin, 1000);
+
+
+    ui->graphTaskNine1->addGraph();
+    ui->graphTaskNine1->graph(0)->setData(x, taskNine1);
+    ui->graphTaskNine1->xAxis->setRange(0, taskNine1.length()+1);
+    ui->graphTaskNine1->yAxis->setRange(analysis.minValue(taskNine1), analysis.maxValue(taskNine1));
+    ui->graphTaskNine1->replot();
+
+    ui->graphTaskNine10->addGraph();
+    ui->graphTaskNine10->graph(0)->setData(x, taskNine10);
+    ui->graphTaskNine10->xAxis->setRange(0, taskNine10.length()+1);
+    ui->graphTaskNine10->yAxis->setRange(analysis.minValue(taskNine10), analysis.maxValue(taskNine10));
+    ui->graphTaskNine10->replot();
+
+    ui->graphTaskNine100->addGraph();
+    ui->graphTaskNine100->graph(0)->setData(x, taskNine100);
+    ui->graphTaskNine100->xAxis->setRange(0, taskNine100.length()+1);
+    ui->graphTaskNine100->yAxis->setRange(analysis.minValue(taskNine100), analysis.maxValue(taskNine100));
+    ui->graphTaskNine100->replot();
+
+    ui->graphTaskNine1000->addGraph();
+    ui->graphTaskNine1000->graph(0)->setData(x, taskNine1000);
+    ui->graphTaskNine1000->xAxis->setRange(0, taskNine1000.length()+1);
+    ui->graphTaskNine1000->yAxis->setRange(analysis.minValue(taskNine1000), analysis.maxValue(taskNine1000));
+    ui->graphTaskNine1000->replot();
 
 // ----------------------------------------
 

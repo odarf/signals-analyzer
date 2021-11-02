@@ -138,11 +138,7 @@ QVector<double> analysis::covariance(QVector<double> firstProcess, QVector<doubl
 }
 
 /*QVector<double> analysis::density(QVector<double> x){
-    int m = 20;
-    QVector<double> density;
-
-
-    //дописать!
+    //mainwindow.cpp через использование QCharts
 
 }*/
 

@@ -24,7 +24,9 @@ public:
     QVector<double> pickoutTrend(QVector<double>);
     QVector<double> trendAddRandom(QVector<double>);
     QVector<double> antiTrend(QVector<double>);
-    QVector<double> pdfTaskEight(QVector<double>);
+    QVector<double> pdfTaskEight();
+    QVector<double> pdfTaskEight2(QVector<double>);
+    QVector<double> pdfTaskNine(QVector<double>, int);
 };
 
 #endif // PROCESSING_H

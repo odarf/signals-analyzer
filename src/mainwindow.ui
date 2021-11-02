@@ -14,7 +14,7 @@
    <bool>false</bool>
   </property>
   <property name="windowTitle">
-   <string>поставьте 4 автоматом пожалуйста</string>
+   <string>МОЭД</string>
   </property>
   <property name="animated">
    <bool>true</bool>
@@ -53,7 +53,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="tabTask1">
      <attribute name="title">
@@ -186,27 +186,27 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>170</y>
-        <width>490</width>
-        <height>400</height>
+        <y>20</y>
+        <width>991</width>
+        <height>340</height>
        </rect>
       </property>
      </widget>
      <widget class="QCustomPlot" name="graphMyRandom" native="true">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>170</y>
-        <width>500</width>
-        <height>400</height>
+        <x>10</x>
+        <y>380</y>
+        <width>991</width>
+        <height>340</height>
        </rect>
       </property>
      </widget>
      <widget class="QLabel" name="label_27">
       <property name="geometry">
        <rect>
-        <x>206</x>
-        <y>150</y>
+        <x>455</x>
+        <y>0</y>
         <width>101</width>
         <height>16</height>
        </rect>
@@ -218,8 +218,8 @@
      <widget class="QLabel" name="label_28">
       <property name="geometry">
        <rect>
-        <x>725</x>
-        <y>150</y>
+        <x>470</x>
+        <y>360</y>
         <width>71</width>
         <height>16</height>
        </rect>
@@ -754,6 +754,84 @@
        </rect>
       </property>
      </widget>
+     <widget class="QLabel" name="label_35">
+      <property name="geometry">
+       <rect>
+        <x>214</x>
+        <y>0</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Гармонический</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_36">
+      <property name="geometry">
+       <rect>
+        <x>705</x>
+        <y>0</y>
+        <width>101</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Полигармонический</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_37">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>240</y>
+        <width>171</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Автокорелляция гармонического</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_38">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>240</y>
+        <width>201</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Автокорелляция полигармонического</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_39">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>480</y>
+        <width>131</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Плотность распеделения</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_40">
+      <property name="geometry">
+       <rect>
+        <x>700</x>
+        <y>480</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Взаимная корелляция</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tabTask6">
      <attribute name="title">
@@ -818,10 +896,49 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>500</y>
+        <y>510</y>
         <width>490</width>
-        <height>230</height>
+        <height>221</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_41">
+      <property name="geometry">
+       <rect>
+        <x>730</x>
+        <y>0</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Со смещением</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_42">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>0</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Исходный</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_43">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>490</y>
+        <width>51</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Выбросы</string>
       </property>
      </widget>
     </widget>
@@ -862,7 +979,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>260</y>
+        <y>280</y>
         <width>490</width>
         <height>230</height>
        </rect>
@@ -875,10 +992,62 @@
       <property name="geometry">
        <rect>
         <x>520</x>
-        <y>260</y>
+        <y>280</y>
         <width>490</width>
         <height>230</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_44">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>0</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Со смещением</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_45">
+      <property name="geometry">
+       <rect>
+        <x>700</x>
+        <y>0</y>
+        <width>121</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Устранение смещения</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_46">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>260</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>С выбросами</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_47">
+      <property name="geometry">
+       <rect>
+        <x>710</x>
+        <y>260</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Устранение выбросов</string>
       </property>
      </widget>
     </widget>
@@ -889,41 +1058,213 @@
      <widget class="QCustomPlot" name="graphTaskEightTrendAdd" native="true">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>20</y>
-        <width>400</width>
-        <height>220</height>
+        <width>490</width>
+        <height>340</height>
        </rect>
       </property>
      </widget>
      <widget class="QCustomPlot" name="graphTaskEightPickTrend" native="true">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>260</y>
-        <width>400</width>
-        <height>220</height>
+        <x>10</x>
+        <y>380</y>
+        <width>490</width>
+        <height>340</height>
        </rect>
       </property>
      </widget>
      <widget class="QCustomPlot" name="graphTaskEightAntiTrend" native="true">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>500</y>
-        <width>400</width>
-        <height>220</height>
+        <x>510</x>
+        <y>20</y>
+        <width>490</width>
+        <height>340</height>
        </rect>
       </property>
      </widget>
      <widget class="QCustomPlot" name="graphTaskEightStdDev" native="true">
       <property name="geometry">
        <rect>
-        <x>560</x>
-        <y>20</y>
-        <width>400</width>
-        <height>220</height>
+        <x>510</x>
+        <y>380</y>
+        <width>490</width>
+        <height>161</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_48">
+      <property name="geometry">
+       <rect>
+        <x>154</x>
+        <y>360</y>
+        <width>201</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Выделение трендовой составляющей</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_49">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>0</y>
+        <width>191</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Удаление трендовой составляющей</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_50">
+      <property name="geometry">
+       <rect>
+        <x>214</x>
+        <y>0</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Тренд + рандом</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_51">
+      <property name="geometry">
+       <rect>
+        <x>604</x>
+        <y>360</y>
+        <width>301</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>𝜎 при различном количестве накоплений случайного шума</string>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphTaskEightStdDev_2" native="true">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>559</y>
+        <width>490</width>
+        <height>161</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_52">
+      <property name="geometry">
+       <rect>
+        <x>738</x>
+        <y>540</y>
+        <width>31</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>𝜎1/ 𝜎i </string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabTask9">
+     <attribute name="title">
+      <string>Task 9</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphTaskNine1" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>490</width>
+        <height>340</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphTaskNine10" native="true">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>20</y>
+        <width>490</width>
+        <height>340</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphTaskNine100" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>380</y>
+        <width>490</width>
+        <height>340</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphTaskNine1000" native="true">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>380</y>
+        <width>490</width>
+        <height>340</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_53">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>0</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1 накопление</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_54">
+      <property name="geometry">
+       <rect>
+        <x>725</x>
+        <y>0</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>10 накоплений</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_55">
+      <property name="geometry">
+       <rect>
+        <x>215</x>
+        <y>360</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>100 накоплений</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_56">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>360</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1000 накоплений</string>
       </property>
      </widget>
     </widget>

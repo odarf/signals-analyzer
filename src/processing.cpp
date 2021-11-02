@@ -81,7 +81,7 @@ QVector<double> processing::trendAddRandom(QVector<double> inputData){
     MainWindow main;
     QVector<double> outputData;
     for(int i = 0; i<inputData.length(); i++){
-        inputData[i] += main.randomGenerator(5);
+        inputData[i] += main.randomGenerator(50);
         outputData.append(inputData[i]);
     }
     return outputData;
@@ -96,16 +96,52 @@ QVector<double> processing::antiTrend(QVector<double> inputData){
     return outputData;
 }
 
-QVector<double> processing::pdfTaskEight(QVector<double> inputData){
-    QVector<double> standartDev(inputData.length());
+QVector<double> processing::pdfTaskEight(){
     QVector<double> temp;
+    QVector<double> temp2(1000);
     analysis analysis;
-    for(int i = 0; i<10; i++){
+    MainWindow main;
+    QVector<int> iter = {1, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000};
+    int i = 0;
+    QVector<double> standartDev(12);
+    for (int iterr = 0; iterr<iter.length(); iterr++) {
+        i = iter[iterr];
+        for(int it = 0; it<i; it++){
+            for(int j = 0; j<1000; j++){
+                temp.append(main.embedRandom());
+                //temp.append(main.randomGenerator(main.randomCoeff));
+            }
+
+            for(int k = 0; k<temp.length(); k++){
+                temp2[k] += temp[k] / i;
+            }
+            temp.clear();
+        }
+        standartDev.append(analysis.standartDeviation(temp2));
+        standartDev.pop_front(); //костыль
+    }
+
+    return standartDev;
+}
+
+QVector<double> processing::pdfTaskEight2(QVector<double> inputStandartDev){
+    QVector<double> outputData(inputStandartDev.length());
+    for (int i = 0; i<outputData.length(); i++){
+        outputData[i] = inputStandartDev[1] / inputStandartDev[i];
+    }
+    return outputData;
+}
+
+QVector<double> processing::pdfTaskNine(QVector<double> inputData, int count){
+    QVector<double> temp;
+    QVector<double> outputData(inputData.length());
+    for(int i = 0; i<count; i++){
         temp.append(trendAddRandom(inputData));
-        for(int j = 0; j<standartDev.length(); j++){
-            standartDev[j] += temp[j] * 0.1;
+        for(int k = 0; k<temp.length(); k++){
+            outputData[k] += temp[k] / count;
         }
         temp.clear();
     }
-    return standartDev;
+    outputData.pop_front();
+    return outputData;
 }
