@@ -1,5 +1,5 @@
 #include "processing.h"
-#include "mainwindow.h"
+#include "modeling.h"
 #include <math.h>
 #include <qmath.h>
 
@@ -12,7 +12,7 @@ QVector<double> processing::offset(QVector<double> data, double coeff){
 }
 
 float processing::shift(float n){
-    return MainWindow().randomGenerator(n) * 1000.0;
+    return modeling().randomGenerator(n) * 1000.0;
 }
 
 QVector<double> processing::spikes(QVector<double> data){
@@ -78,10 +78,9 @@ QVector<double> processing::pickoutTrend(QVector<double> inputData){
 }
 
 QVector<double> processing::trendAddRandom(QVector<double> inputData){
-    MainWindow main;
     QVector<double> outputData;
     for(int i = 0; i<inputData.length(); i++){
-        inputData[i] += main.randomGenerator(50);
+        inputData[i] += modeling().randomGenerator(50);
         outputData.append(inputData[i]);
     }
     return outputData;
@@ -100,7 +99,6 @@ QVector<double> processing::pdfTaskEight(){
     QVector<double> temp;
     QVector<double> temp2(1000);
     analysis analysis;
-    MainWindow main;
     QVector<int> iter = {1, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500, 1000};
     int i = 0;
     QVector<double> standartDev(12);
@@ -108,7 +106,7 @@ QVector<double> processing::pdfTaskEight(){
         i = iter[iterr];
         for(int it = 0; it<i; it++){
             for(int j = 0; j<1000; j++){
-                temp.append(main.embedRandom());
+                temp.append(modeling().embedRandom());
                 //temp.append(main.randomGenerator(main.randomCoeff));
             }
 
