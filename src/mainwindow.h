@@ -18,6 +18,7 @@ public:
     float randomCoeff = 0.0;
     float randomGenerator(float coeff);
     float embedRandom();
+    //float cardio();
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

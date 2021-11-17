@@ -68,7 +68,9 @@ void MainWindow::on_pushButton_clicked(){
                     ySin(LENGTH),    yCombinated,
                     xLarge(3*LENGTH),yEmbedRandom2(LENGTH),
                     x(LENGTH),       ySmoothed(LENGTH),
-                    xSin(LENGTH),    xTemp(LENGTH);
+                    xSin(LENGTH),    xTemp(LENGTH),
+                    yCardioX(LENGTH),yCardioH(200),
+                    yCardioMain(1200);
 
     double a = -1;
     double beta = 11;
@@ -89,6 +91,32 @@ void MainWindow::on_pushButton_clicked(){
         yEmbedRandom2[X] = embedRandom();
         ySin[X] = amplitude[0] * sin(2 * 3.14 * frequency[0] * X * delta_t);
     }
+
+
+    int cardioN = 1000;
+    int cardioM = 200;
+    float cardioAlpha = 10;
+    int cardioF = 4;
+    int const tempN = cardioN+cardioM-1;
+
+    for(int i = 0; i<yCardioH.length(); i++){
+        yCardioH[i] = sin(2*3.14*cardioF*(i*0.005))*exp(-cardioAlpha * i*0.005);
+    }
+
+
+    yCardioX[200] = 120;
+    yCardioX[400] = 130;
+    yCardioX[600] = 110;
+
+    for(auto i(0); i<tempN; ++i){
+        int const jmn = (i>=cardioM-1)?i-(cardioM-1):0;
+        int const jmx = (i<cardioN-1)?i:cardioN-1;
+        for(auto j(jmn); j<=jmx; ++j){
+            yCardioMain[i] += yCardioX[j] * yCardioH[i-j];
+        }
+        //std::cout << yCardioMain[k] << std::endl;
+    }
+
 
     for(int i = 0; i<3000; i++){
         xLarge[i] = i;
@@ -474,6 +502,18 @@ void MainWindow::on_pushButton_clicked(){
     ui->graphTaskNine1000->replot();
 
 // ----------------------------------------
+
+
+
+// ---------- Cardio ----------
+    ui->graphCardio->addGraph();
+    ui->graphCardio->graph(0)->setData(x, yCardioMain);
+    ui->graphCardio->xAxis->setRange(0, 1200);
+    ui->graphCardio->yAxis->setRange(analysis.minValue(yCardioMain)-1, analysis.maxValue(yCardioMain)+1);
+    ui->graphCardio->replot();
+
+// ----------------------------------------
+
 
 // ---------- Очистка графиков ----------
     ui->graphLinInc->clearGraphs();
