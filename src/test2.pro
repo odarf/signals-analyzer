@@ -13,6 +13,7 @@ SOURCES += \
     analysis.cpp \
     main.cpp \
     mainwindow.cpp \
+    modeling.cpp \
     processing.cpp \
     qcustomplot.cpp \
 
@@ -20,6 +21,7 @@ SOURCES += \
 HEADERS += \
     analysis.h \
     mainwindow.h \
+    modeling.h \
     processing.h \
     qcustomplot.h \
 
