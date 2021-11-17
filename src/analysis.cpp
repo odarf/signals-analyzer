@@ -102,7 +102,7 @@ bool analysis::isStationary(QVector<double> x){
     return true;
 }
 
-QVector<double> analysis::autocovariance(QVector<double> x){
+QVector<double> analysis::autocorrelation(QVector<double> x){
     double avg = mean(x);
     int n = x.length();
     QVector<double> autocovariance;

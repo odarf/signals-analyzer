@@ -169,9 +169,9 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphCovar->replot();
 
             ui->graphAutocorr->addGraph();
-            ui->graphAutocorr->graph(0)->setData(x, analysis.autocovariance(yEmbedRandom1));
+            ui->graphAutocorr->graph(0)->setData(x, analysis.autocorrelation(yEmbedRandom1));
             ui->graphAutocorr->xAxis->setRange(0, LENGTH);
-            ui->graphAutocorr->yAxis->setRange(analysis.minValue(analysis.autocovariance(yEmbedRandom1)), 0.2);
+            ui->graphAutocorr->yAxis->setRange(analysis.minValue(analysis.autocorrelation(yEmbedRandom1)), 0.2);
             ui->graphAutocorr->replot();
 
             QBarSet *barSet = new QBarSet("");
@@ -230,15 +230,15 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphTaskFivePolyharmo->replot();
 
             ui->graphTaskFiveHarmoAutocorr->addGraph();
-            ui->graphTaskFiveHarmoAutocorr->graph(0)->setData(x, analysis.autocovariance(yHarmonic));
+            ui->graphTaskFiveHarmoAutocorr->graph(0)->setData(x, analysis.autocorrelation(yHarmonic));
             ui->graphTaskFiveHarmoAutocorr->xAxis->setRange(0, LENGTH);
-            ui->graphTaskFiveHarmoAutocorr->yAxis->setRange(analysis.minValue(analysis.autocovariance(yHarmonic))-1, analysis.maxValue(analysis.autocovariance(yHarmonic))+1);
+            ui->graphTaskFiveHarmoAutocorr->yAxis->setRange(analysis.minValue(analysis.autocorrelation(yHarmonic))-1, analysis.maxValue(analysis.autocorrelation(yHarmonic))+1);
             ui->graphTaskFiveHarmoAutocorr->replot();
 
             ui->graphTaskFivePolyAutocorr->addGraph();
-            ui->graphTaskFivePolyAutocorr->graph(0)->setData(x, analysis.autocovariance(yPolyharmonic));
+            ui->graphTaskFivePolyAutocorr->graph(0)->setData(x, analysis.autocorrelation(yPolyharmonic));
             ui->graphTaskFivePolyAutocorr->xAxis->setRange(0, LENGTH);
-            ui->graphTaskFivePolyAutocorr->yAxis->setRange(analysis.minValue(analysis.autocovariance(yPolyharmonic))-1, analysis.maxValue(analysis.autocovariance(yPolyharmonic))+1);
+            ui->graphTaskFivePolyAutocorr->yAxis->setRange(analysis.minValue(analysis.autocorrelation(yPolyharmonic))-1, analysis.maxValue(analysis.autocorrelation(yPolyharmonic))+1);
             ui->graphTaskFivePolyAutocorr->replot();
 
             ui->graphTaskFiveCrosscorr->addGraph();

@@ -8,21 +8,47 @@ class analysis
 private:
 public:
     analysis();
-    double minValue(QVector<double>);
-    double maxValue(QVector<double>);
-    double mean(QVector<double>);
-    double dispersion(QVector<double>);
-    double standartDeviation(QVector<double>);
-    double sqrtDeviation(QVector<double>);
-    double sqrtError(QVector<double>);
-    double assymetry(QVector<double>);
-    double assymetryCoeff(QVector<double>);
-    double excess(QVector<double>);
-    double curtosis(QVector<double>);
-    bool isStationary(QVector<double>);
-    QVector<double> autocovariance(QVector<double>);
-    QVector<double> covariance(QVector<double>, QVector<double>);
-    QVector<double> density(QVector<double>);
+    ///Поиск минимального значения во входном массиве
+    double minValue(QVector<double> x);
+
+    ///Поиск максимального значения во входном массиве
+    double maxValue(QVector<double> x);
+
+    ///Математическое ожидания(среднее)
+    double mean(QVector<double> x);
+
+    ///Дисперсия
+    double dispersion(QVector<double> x);
+
+    ///Стандартное отклонение
+    double standartDeviation(QVector<double> x);
+
+    ///Среднеквадратическое отклонение
+    double sqrtDeviation(QVector<double> x);
+
+    ///Среднеквадратическая ошибка
+    double sqrtError(QVector<double> x);
+
+    ///Ассиметрия
+    double assymetry(QVector<double> x);
+
+    ///Коэффициент ассиметрии
+    double assymetryCoeff(QVector<double> x);
+
+    ///Эксцесс
+    double excess(QVector<double> x);
+
+    ///Куртозис
+    double curtosis(QVector<double> x);
+
+    ///Проверка на стационарность
+    bool isStationary(QVector<double> x);
+
+    ///Автокорреляция
+    QVector<double> autocorrelation(QVector<double> x);
+
+    ///Ковариация
+    QVector<double> covariance(QVector<double> firstProcess, QVector<double> secondProcess);
 };
 
 #endif // ANALYSIS_H
