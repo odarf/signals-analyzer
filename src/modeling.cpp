@@ -74,7 +74,7 @@ QVector<double> modeling::polyharmonic(int length, int amplitude[], int frequenc
     for(int count=0; count<3; count++){
         for(int i=0; i<5; i++){
             for(int x=0; x<length; x++){
-                polyharmonic[x] = amplitude[count] * sin(2 * 3.14 * frequency[count] * x);// * delta_t);
+                polyharmonic[x] += amplitude[count] * sin(2 * 3.14 * frequency[count] * x);// * delta_t);
             }
         }
     }
