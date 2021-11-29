@@ -137,8 +137,44 @@ QVector<double> analysis::covariance(QVector<double> firstProcess, QVector<doubl
     return covariance;
 }
 
-/*QVector<double> analysis::density(QVector<double> x){
-    //mainwindow.cpp через использование QCharts
+QVector<double> analysis::fourierAmplitude(QVector<double> inputData){
+    int length = inputData.length();
+    QVector<double> outputData;
 
-}*/
+    for(int i = 0; i<length/2; i++){
+        double real = 0;
+        double imagine = 0;
 
+        for(int j = 0; j<length; j++){
+            real += inputData[j] * std::cos((2 * 3.14 * i * j) / length);
+            imagine += inputData[j] * std::sin((2 * 3.14 * i * j) / length);
+        }
+        real /= length;
+        imagine /= length;
+        outputData.append(std::sqrt(std::pow(real, 2) + std::pow(imagine, 2)));
+    }
+    return outputData;
+}
+
+QVector<double> analysis::fourierSpectrum(QVector<double> inputData, double window){
+    int length = inputData.length();
+    double w = (length - length * window) / 2;
+    QVector<double> outputData;
+
+    for(int i = 0; i<w; i++){
+        inputData[i] = 0;
+        inputData[length - i - 1] = 0;
+    }
+    for(int i = 0; i<length/2; i++){
+        double real = 0;
+        double imagine = 0;
+        for(int j = 0; j<length; j++){
+            real += inputData[j] * std::cos((2 * 3.14 * i * j) / length);
+            imagine += inputData[j] * std::sin((2 * 3.14 * i * j) / length);
+        }
+        real /= length;
+        imagine /= length;
+        outputData.append(std::sqrt(std::pow(real, 2) + std::pow(imagine, 2)));
+    }
+    return outputData;
+}

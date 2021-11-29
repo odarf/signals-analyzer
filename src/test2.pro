@@ -11,6 +11,7 @@ CONFIG += c++11
 
 SOURCES += \
     analysis.cpp \
+    inou.cpp \
     main.cpp \
     mainwindow.cpp \
     modeling.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     analysis.h \
+    inou.h \
     mainwindow.h \
     modeling.h \
     processing.h \

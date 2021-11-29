@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "modeling.h"
 #include "analysis.h"
+#include "inou.h"
 #include "qmath.h"
 
 #include <iostream>
@@ -19,6 +20,8 @@
 #include <math.h>
 #include <time.h>
 #include <random>
+
+#include <fstream>
 
 using namespace QtCharts;
 using namespace std;
@@ -75,6 +78,34 @@ void MainWindow::on_pushButton_clicked(){
     yCombinated.append(yLinDec);
     yCombinated.append(yExpInc);
 //--------------------------------
+
+    QVector<double> dataFile = inou().load("data.dat");
+    QVector<double> xfile(dataFile.length());
+    for (int i=0; i<xfile.length(); i++) { xfile[i] = i; }
+
+    ui->graphFromFile->addGraph();
+    ui->graphFromFile->graph(0)->setData(xfile, dataFile);
+    ui->graphFromFile->xAxis->setRange(0, xfile.length());
+    ui->graphFromFile->yAxis->setRange(analysis.minValue(dataFile), analysis.maxValue(dataFile));
+    ui->graphFromFile->replot();
+
+    QVector<double> fouramp = analysis.fourierAmplitude(dataFile);
+    fouramp = processing.offset(fouramp, 10);
+
+    ui->graphFourierAmplitude->addGraph();
+    ui->graphFourierAmplitude->graph(0)->setData(xfile, fouramp);
+    ui->graphFourierAmplitude->xAxis->setRange(0, xfile.length());
+    ui->graphFourierAmplitude->yAxis->setRange(analysis.minValue(fouramp), analysis.maxValue(fouramp));
+    ui->graphFourierAmplitude->replot();
+
+    QVector<double> fourspec = analysis.fourierSpectrum(dataFile, 0.91);
+
+    ui->graphFourierSpectrum->addGraph();
+    ui->graphFourierSpectrum->graph(0)->setData(xfile, fourspec);
+    ui->graphFourierSpectrum->xAxis->setRange(0, xfile.length());
+    ui->graphFourierSpectrum->yAxis->setRange(analysis.minValue(fourspec), analysis.maxValue(fourspec));
+    ui->graphFourierSpectrum->replot();
+
 
 // ---------------- Рисование ----------------
     int currentTask = ui->tabWidget->currentIndex() + 1;

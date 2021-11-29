@@ -53,7 +53,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>10</number>
     </property>
     <widget class="QWidget" name="tabTask1">
      <attribute name="title">
@@ -1279,6 +1279,41 @@
         <y>120</y>
         <width>881</width>
         <height>340</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Страница</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphFromFile" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>990</width>
+        <height>210</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphFourierAmplitude" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>280</y>
+        <width>990</width>
+        <height>210</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphFourierSpectrum" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>520</y>
+        <width>990</width>
+        <height>210</height>
        </rect>
       </property>
      </widget>

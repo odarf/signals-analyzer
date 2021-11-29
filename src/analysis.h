@@ -49,6 +49,12 @@ public:
 
     ///Ковариация
     QVector<double> covariance(QVector<double> firstProcess, QVector<double> secondProcess);
+
+    ///Амплитуда Фурье
+    QVector<double> fourierAmplitude(QVector<double> inputData);
+
+    ///Спектр Фурье
+    QVector<double> fourierSpectrum(QVector<double> inputData, double window);
 };
 
 #endif // ANALYSIS_H
