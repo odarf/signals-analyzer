@@ -73,38 +73,22 @@ void MainWindow::on_pushButton_clicked(){
         xLarge[i] = i;
     }
 
+    for(int i = 0; i<yCardio.length(); i++){
+        yCardio[i] += modeling.randomGenerator(0.75);
+    }
+
 //------Для первого задания ------
     yCombinated.append(yLinInc);
     yCombinated.append(yLinDec);
     yCombinated.append(yExpInc);
 //--------------------------------
 
-    QVector<double> dataFile = inou().load("data.dat");
-    QVector<double> xfile(dataFile.length());
-    for (int i=0; i<xfile.length(); i++) { xfile[i] = i; }
-
-    ui->graphFromFile->addGraph();
-    ui->graphFromFile->graph(0)->setData(xfile, dataFile);
-    ui->graphFromFile->xAxis->setRange(0, xfile.length());
-    ui->graphFromFile->yAxis->setRange(analysis.minValue(dataFile), analysis.maxValue(dataFile));
-    ui->graphFromFile->replot();
-
-    QVector<double> fouramp = analysis.fourierAmplitude(dataFile);
-    fouramp = processing.offset(fouramp, 10);
-
-    ui->graphFourierAmplitude->addGraph();
-    ui->graphFourierAmplitude->graph(0)->setData(xfile, fouramp);
-    ui->graphFourierAmplitude->xAxis->setRange(0, xfile.length());
-    ui->graphFourierAmplitude->yAxis->setRange(analysis.minValue(fouramp), analysis.maxValue(fouramp));
-    ui->graphFourierAmplitude->replot();
-
-    QVector<double> fourspec = analysis.fourierSpectrum(dataFile, 0.91);
-
-    ui->graphFourierSpectrum->addGraph();
-    ui->graphFourierSpectrum->graph(0)->setData(xfile, fourspec);
-    ui->graphFourierSpectrum->xAxis->setRange(0, xfile.length());
-    ui->graphFourierSpectrum->yAxis->setRange(analysis.minValue(fourspec), analysis.maxValue(fourspec));
-    ui->graphFourierSpectrum->replot();
+    QVector<double> weights = analysis.lowpassFilterPotter(0,0);
+    ui->graphLPF->addGraph();
+    ui->graphLPF->graph(0)->setData(x, weights);
+    ui->graphLPF->xAxis->setRange(0, 200);
+    ui->graphLPF->yAxis->setRange(-0.1, analysis.maxValue(weights)+0.1);
+    ui->graphLPF->replot();
 
 
 // ---------------- Рисование ----------------
@@ -475,14 +459,52 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 10:
-        // ---------- Cardio ----------
+        case 10:{
+        // --------------- Task 10 ----------------
+            QVector<double> dataFile = inou().load("data.dat");
+            QVector<double> xfile(dataFile.length());
+            for (int i=0; i<xfile.length(); i++) { xfile[i] = i; }
+
+
+            ui->graphFromFile->addGraph();
+            ui->graphFromFile->graph(0)->setData(xfile, dataFile);
+            ui->graphFromFile->xAxis->setRange(0, xfile.length());
+            ui->graphFromFile->yAxis->setRange(analysis.minValue(dataFile)-10, analysis.maxValue(dataFile)+10);
+            ui->graphFromFile->replot();
+
+            QVector<double> fouramp = analysis.fourierAmplitude(dataFile);
+            QVector<double> fourierFreq = analysis.calculateFrequency(0.002, dataFile.length());
+
+
+            ui->graphFourierAmplitude->addGraph();
+            ui->graphFourierAmplitude->graph(0)->setData(fourierFreq, fouramp);
+            ui->graphFourierAmplitude->xAxis->setRange(0, 250);
+            ui->graphFourierAmplitude->yAxis->setRange(analysis.minValue(fouramp), analysis.maxValue(fouramp)+5);
+            ui->graphFourierAmplitude->replot();
+
+            QVector<double> fourspec = analysis.fourierSpectrum(dataFile, 0.91);
+
+            ui->graphFourierSpectrum->addGraph();
+            ui->graphFourierSpectrum->graph(0)->setData(fourierFreq, fourspec);
+            ui->graphFourierSpectrum->xAxis->setRange(0, 250);
+            ui->graphFourierSpectrum->yAxis->setRange(analysis.minValue(fourspec), analysis.maxValue(fourspec)+6);
+            ui->graphFourierSpectrum->replot();
+        // ----------------------------------------
+            break;
+        }
+        case 11:
+        // --------------- Task 11 ----------------
             ui->graphCardio->addGraph();
             ui->graphCardio->graph(0)->setData(x, yCardio);
-            ui->graphCardio->xAxis->setRange(0, 1200);
+            ui->graphCardio->xAxis->setRange(0, x.length());
             ui->graphCardio->yAxis->setRange(analysis.minValue(yCardio)-1, analysis.maxValue(yCardio)+1);
             ui->graphCardio->replot();
-        // -----------------------------
+        // ----------------------------------------
+            break;
+        case 12:
+        // --------------- Task 12 ----------------
+
+        // ----------------------------------------
             break;
 
         default:

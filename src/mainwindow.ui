@@ -10,14 +10,52 @@
     <height>846</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1029</width>
+    <height>846</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1029</width>
+    <height>846</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <weight>50</weight>
+    <italic>false</italic>
+    <bold>false</bold>
+    <strikeout>false</strikeout>
+   </font>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
+  </property>
   <property name="tabletTracking">
    <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>МОЭД</string>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
   <property name="animated">
    <bool>true</bool>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pushButton">
@@ -28,6 +66,9 @@
       <width>80</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="text">
      <string>Plot</string>
@@ -53,7 +94,13 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>10</number>
+     <number>11</number>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>16</width>
+      <height>16</height>
+     </size>
     </property>
     <widget class="QWidget" name="tabTask1">
      <attribute name="title">
@@ -1268,24 +1315,9 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="tabTask10">
      <attribute name="title">
-      <string>Страница</string>
-     </attribute>
-     <widget class="QCustomPlot" name="graphCardio" native="true">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>120</y>
-        <width>881</width>
-        <height>340</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Страница</string>
+      <string>Task 10</string>
      </attribute>
      <widget class="QCustomPlot" name="graphFromFile" native="true">
       <property name="geometry">
@@ -1317,8 +1349,93 @@
        </rect>
       </property>
      </widget>
+     <widget class="QLabel" name="label_57">
+      <property name="geometry">
+       <rect>
+        <x>485</x>
+        <y>17</y>
+        <width>40</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Сигнал</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_58">
+      <property name="geometry">
+       <rect>
+        <x>484</x>
+        <y>257</y>
+        <width>40</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Спектр</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_59">
+      <property name="geometry">
+       <rect>
+        <x>455</x>
+        <y>497</y>
+        <width>100</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Спектр (окно 91%)</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabTask11">
+     <attribute name="title">
+      <string>Task 11</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphCardio" native="true">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>200</y>
+        <width>880</width>
+        <height>340</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_60">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>180</y>
+        <width>80</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Кардиограмма</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabTask12">
+     <attribute name="title">
+      <string>Task 12</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphLPF" native="true">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>180</y>
+        <width>880</width>
+        <height>340</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
+   <zorder>tabWidget</zorder>
+   <zorder>pushButton</zorder>
+   <zorder>sbCoeff</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

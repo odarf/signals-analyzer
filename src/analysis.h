@@ -55,6 +55,13 @@ public:
 
     ///Спектр Фурье
     QVector<double> fourierSpectrum(QVector<double> inputData, double window);
+
+    ///Расчёт частоты для оси х графика спектра Фурье
+    QVector<double> calculateFrequency(double delta_t, int N);
+
+    ///Расчёт импульсной реакции фильтра низких частот Поттера
+    QVector<double> lowpassFilterPotter(double delta_t, int N);
+
 };
 
 #endif // ANALYSIS_H
