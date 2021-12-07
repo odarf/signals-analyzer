@@ -190,11 +190,9 @@ QVector<double> analysis::calculateFrequency(double delta_t, int N){
     return frequency;
 }
 
-QVector<double> analysis::lowpassFilterPotter(double delta_t, int N){
-    float fc = 0.125;
-    int m = 128;
+QVector<double> analysis::lowpassFilterPotter(double fc, int m){
     const double d[4] = {0.35577019, 0.2436983, 0.07211497, 0.00630165};
-    float fact = float(2*fc);
+    float fact = float(2.0*fc);
     QVector<double> lpw;
     lpw.append(fact);
     auto arg = fact * 3.14;
@@ -202,6 +200,7 @@ QVector<double> analysis::lowpassFilterPotter(double delta_t, int N){
         lpw.append(std::sin(arg*i)/(3.14*i));
     }
     lpw[m] /= 2.0;
+    //P310
     auto sumg = lpw[0];
     for(int i = 1; i<=m; i++){
         auto sum = d[0];
@@ -215,5 +214,10 @@ QVector<double> analysis::lowpassFilterPotter(double delta_t, int N){
     for(int i = 0; i<=m; i++){
         lpw[i] /= sumg;
     }
-    return lpw;
+    QVector<double> temp;
+    for(int i = m; i>0; i--){
+        temp.append(lpw[i]);
+    }
+    temp.append(lpw);
+    return temp;
 }

@@ -94,7 +94,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>11</number>
+     <number>14</number>
     </property>
     <property name="iconSize">
      <size>
@@ -1424,10 +1424,185 @@
      <widget class="QCustomPlot" name="graphLPF" native="true">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>180</y>
-        <width>880</width>
-        <height>340</height>
+        <x>10</x>
+        <y>20</y>
+        <width>490</width>
+        <height>330</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphPF" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>370</y>
+        <width>490</width>
+        <height>330</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphRF" native="true">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>370</y>
+        <width>490</width>
+        <height>330</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphHPF" native="true">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>20</y>
+        <width>490</width>
+        <height>330</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabTask13">
+     <attribute name="title">
+      <string>Task 13</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphAfcLp" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>990</width>
+        <height>170</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphAfcHp" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>190</y>
+        <width>990</width>
+        <height>170</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphAfcPf" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>380</y>
+        <width>990</width>
+        <height>170</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphAfcRf" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>560</y>
+        <width>990</width>
+        <height>170</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabTask14">
+     <attribute name="title">
+      <string>Task 14</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphFilteredLp" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>500</width>
+        <height>225</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphFilteredLpAmpl" native="true">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>10</y>
+        <width>500</width>
+        <height>225</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphFilteredHpAmpl" native="true">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>260</y>
+        <width>500</width>
+        <height>225</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphFilteredHp" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>260</y>
+        <width>500</width>
+        <height>225</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphFilteredPfAmpl" native="true">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>510</y>
+        <width>500</width>
+        <height>225</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphFilteredPf" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>510</y>
+        <width>500</width>
+        <height>225</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabTask15">
+     <attribute name="title">
+      <string>Wav File</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graphWavFile" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>1010</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphWavFileFourier" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>260</y>
+        <width>1010</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graphWavFileLoud" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>500</y>
+        <width>1010</width>
+        <height>221</height>
        </rect>
       </property>
      </widget>

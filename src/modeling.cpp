@@ -100,7 +100,7 @@ QVector<double> modeling::cardiogram(){
 
     for(auto i(0); i<tempN; ++i){
         int const jmn = (i >= M - 1) ? i - (M - 1) : 0;
-        int const jmx = (i < N - 1) ? i            : N-1;
+        int const jmx = (i < N - 1)  ? i           : N-1;
         for(auto j(jmn); j<=jmx; ++j){
             y[i] += x[j] * h[i-j];
         }

@@ -11,6 +11,8 @@ class inou
 public:
     inou();
     QVector<double> load(string path);
+    QVector<double> loadWave(const char* fileName, const char* fileToSave);
+
 };
 
 #endif // INOU_H

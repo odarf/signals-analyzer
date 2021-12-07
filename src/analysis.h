@@ -60,7 +60,7 @@ public:
     QVector<double> calculateFrequency(double delta_t, int N);
 
     ///Расчёт импульсной реакции фильтра низких частот Поттера
-    QVector<double> lowpassFilterPotter(double delta_t, int N);
+    QVector<double> lowpassFilterPotter(double fc, int m);
 
 };
 

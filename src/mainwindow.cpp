@@ -42,8 +42,9 @@ void MainWindow::on_pushButton_clicked(){
 
     double k = -1;
 
-    double beta = 11;
-    double alpha = -0.01;
+    //double beta = 11;
+    //double alpha = -0.01;
+
     int amplitude[] = {10, 100, 15};
     int frequency[] = {4, 37, 173};
     float randomCoeff = (float)ui->sbCoeff->value();
@@ -73,22 +74,178 @@ void MainWindow::on_pushButton_clicked(){
         xLarge[i] = i;
     }
 
-    for(int i = 0; i<yCardio.length(); i++){
-        yCardio[i] += modeling.randomGenerator(0.75);
-    }
-
 //------Для первого задания ------
     yCombinated.append(yLinInc);
     yCombinated.append(yLinDec);
     yCombinated.append(yExpInc);
 //--------------------------------
-
-    QVector<double> weights = analysis.lowpassFilterPotter(0,0);
+    double fc = 0.3;
+    double fc2 = 0.6;
+    int m = 64;
+    int Loper = 2 * m + 1;
+    QVector<double> lpfWeights = analysis.lowpassFilterPotter(fc, m);
+    QVector<double> lpfWeights2 = analysis.lowpassFilterPotter(fc2, m);
+    QVector<double> hpfWeights;
+    QVector<double> pfWeights;
+    QVector<double> rfWeights;
     ui->graphLPF->addGraph();
-    ui->graphLPF->graph(0)->setData(x, weights);
-    ui->graphLPF->xAxis->setRange(0, 200);
-    ui->graphLPF->yAxis->setRange(-0.1, analysis.maxValue(weights)+0.1);
+    ui->graphLPF->graph(0)->setData(x, lpfWeights);
+    ui->graphLPF->xAxis->setRange(0, 2*m);
+    ui->graphLPF->yAxis->setRange(analysis.minValue(lpfWeights)-0.01, analysis.maxValue(lpfWeights)+0.01);
     ui->graphLPF->replot();
+
+    for(int i = 0; i<=Loper-1; i++){ i==m ? hpfWeights.append(1 - lpfWeights[i]) : hpfWeights.append(-lpfWeights[i]); }
+
+    ui->graphHPF->addGraph();
+    ui->graphHPF->graph(0)->setData(x, hpfWeights);
+    ui->graphHPF->xAxis->setRange(0, 2*m);
+    ui->graphHPF->yAxis->setRange(analysis.minValue(hpfWeights)-0.01, analysis.maxValue(hpfWeights)+0.1);
+    ui->graphHPF->replot();
+
+    for(int i = 0; i<=Loper-1; i++){ pfWeights.append(lpfWeights2[i] - lpfWeights[i]); }
+
+    ui->graphPF->addGraph();
+    ui->graphPF->graph(0)->setData(x, pfWeights);
+    ui->graphPF->xAxis->setRange(0, 2*m);
+    ui->graphPF->yAxis->setRange(analysis.minValue(pfWeights)-0.01, analysis.maxValue(pfWeights)+0.01);
+    ui->graphPF->replot();
+
+    for(int i = 0; i<=Loper-1; i++){ i==m ? rfWeights.append(1 + lpfWeights[i] - lpfWeights2[i]) : rfWeights.append(lpfWeights[i] - lpfWeights2[i]); }
+
+    ui->graphRF->addGraph();
+    ui->graphRF->graph(0)->setData(x, rfWeights);
+    ui->graphRF->xAxis->setRange(0, 2*m);
+    ui->graphRF->yAxis->setRange(analysis.minValue(rfWeights)-0.01, analysis.maxValue(rfWeights)+0.01);
+    ui->graphRF->replot();
+
+
+    QVector<double> achxLP = analysis.fourierAmplitude(lpfWeights);
+    QVector<double> achxHP = analysis.fourierAmplitude(hpfWeights);
+    QVector<double> achxPF = analysis.fourierAmplitude(pfWeights);
+    QVector<double> achxRF = analysis.fourierAmplitude(rfWeights);
+
+    for(int i = 0; i<m; i++){
+        achxLP[i] *= 2*m;
+        achxHP[i] *= 2*m;
+        achxPF[i] *= 2*m;
+        achxRF[i] *= 2*m;
+    }
+
+    ui->graphAfcLp->addGraph();
+    ui->graphAfcLp->graph(0)->setData(x, achxLP);
+    ui->graphAfcLp->xAxis->setRange(0, m);
+    ui->graphAfcLp->yAxis->setRange(0, analysis.maxValue(achxLP)+analysis.maxValue(achxLP)/10);
+    ui->graphAfcLp->replot();
+
+    ui->graphAfcHp->addGraph();
+    ui->graphAfcHp->graph(0)->setData(x, achxHP);
+    ui->graphAfcHp->xAxis->setRange(0, m);
+    ui->graphAfcHp->yAxis->setRange(0, analysis.maxValue(achxHP)+analysis.maxValue(achxHP)/10);
+    ui->graphAfcHp->replot();
+
+    ui->graphAfcPf->addGraph();
+    ui->graphAfcPf->graph(0)->setData(x, achxPF);
+    ui->graphAfcPf->xAxis->setRange(0, m);
+    ui->graphAfcPf->yAxis->setRange(0, analysis.maxValue(achxPF)+analysis.maxValue(achxPF)/10);
+    ui->graphAfcPf->replot();
+
+    ui->graphAfcRf->addGraph();
+    ui->graphAfcRf->graph(0)->setData(x, achxRF);
+    ui->graphAfcRf->xAxis->setRange(0, m);
+    ui->graphAfcRf->yAxis->setRange(0, analysis.maxValue(achxRF)+analysis.maxValue(achxRF)/10);
+    ui->graphAfcRf->replot();
+
+    QVector<double> dataFile = inou().load("C:/data.dat");
+    int N = dataFile.length();
+    int M = lpfWeights.length();
+    QVector<double> filteredLp(N+M);
+    int tempN = N + M-1;
+
+    for(auto i(0); i<tempN; ++i){
+        int const jmn = (i >= M - 1) ? i - (M - 1) : 0;
+        int const jmx = (i < N - 1)  ? i           : N-1;
+        for(auto j(jmn); j<=jmx; ++j){
+            filteredLp[i] += dataFile[j] * lpfWeights[i-j];
+        }
+    }
+
+    for(int i(0); i<=M/2; i++){
+        filteredLp.pop_front();
+        filteredLp.pop_back();
+    }
+
+    ui->graphFilteredLp->addGraph();
+    ui->graphFilteredLp->graph(0)->setData(x, filteredLp);
+    ui->graphFilteredLp->xAxis->setRange(0, 1000);
+    ui->graphFilteredLp->yAxis->setRange(analysis.minValue(filteredLp), analysis.maxValue(filteredLp)+analysis.maxValue(filteredLp)/10);
+    ui->graphFilteredLp->replot();
+
+    ui->graphFilteredLpAmpl->addGraph();
+    ui->graphFilteredLpAmpl->graph(0)->setData(x, analysis.fourierAmplitude(filteredLp));
+    ui->graphFilteredLpAmpl->xAxis->setRange(0, 400);
+    ui->graphFilteredLpAmpl->yAxis->setRange(analysis.minValue(analysis.fourierAmplitude(filteredLp)), analysis.maxValue(analysis.fourierAmplitude(filteredLp))+analysis.maxValue(analysis.fourierAmplitude(filteredLp))/10);
+    ui->graphFilteredLpAmpl->replot();
+
+    M = hpfWeights.length();
+    QVector<double> filteredHp(N+M);
+    tempN = N + M-1;
+
+    for(auto i(0); i<tempN; ++i){
+        int const jmn = (i >= M - 1) ? i - (M - 1) : 0;
+        int const jmx = (i < N - 1)  ? i           : N-1;
+        for(auto j(jmn); j<=jmx; ++j){
+            filteredHp[i] += dataFile[j] * hpfWeights[i-j];
+        }
+    }
+
+    for(int i(0); i<=M/2; i++){
+        filteredHp.pop_front();
+        filteredHp.pop_back();
+    }
+
+    ui->graphFilteredHp->addGraph();
+    ui->graphFilteredHp->graph(0)->setData(x, filteredHp);
+    ui->graphFilteredHp->xAxis->setRange(0, 1000);
+    ui->graphFilteredHp->yAxis->setRange(analysis.minValue(filteredHp), analysis.maxValue(filteredHp)+analysis.maxValue(filteredHp)/10);
+    ui->graphFilteredHp->replot();
+
+    ui->graphFilteredHpAmpl->addGraph();
+    ui->graphFilteredHpAmpl->graph(0)->setData(x, analysis.fourierAmplitude(filteredHp));
+    ui->graphFilteredHpAmpl->xAxis->setRange(0, 400);
+    ui->graphFilteredHpAmpl->yAxis->setRange(analysis.minValue(analysis.fourierAmplitude(filteredHp)), analysis.maxValue(analysis.fourierAmplitude(filteredHp))+analysis.maxValue(analysis.fourierAmplitude(filteredHp))/10);
+    ui->graphFilteredHpAmpl->replot();
+
+    M = rfWeights.length();
+    QVector<double> filteredRf(N+M);
+    tempN = N + M-1;
+
+    for(auto i(0); i<tempN; ++i){
+        int const jmn = (i >= M - 1) ? i - (M - 1) : 0;
+        int const jmx = (i < N - 1)  ? i           : N-1;
+        for(auto j(jmn); j<=jmx; ++j){
+            filteredRf[i] += dataFile[j] * rfWeights[i-j];
+        }
+    }
+
+    for(int i(0); i<=M/2; i++){
+        filteredRf.pop_front();
+        filteredRf.pop_back();
+    }
+
+
+    ui->graphFilteredPf->addGraph();
+    ui->graphFilteredPf->graph(0)->setData(x, filteredRf);
+    ui->graphFilteredPf->xAxis->setRange(0, 1000);
+    ui->graphFilteredPf->yAxis->setRange(analysis.minValue(filteredRf), analysis.maxValue(filteredRf)+analysis.maxValue(filteredRf)/10);
+    ui->graphFilteredPf->replot();
+
+    ui->graphFilteredPfAmpl->addGraph();
+    ui->graphFilteredPfAmpl->graph(0)->setData(x, analysis.fourierAmplitude(filteredRf));
+    ui->graphFilteredPfAmpl->xAxis->setRange(0, 400);
+    ui->graphFilteredPfAmpl->yAxis->setRange(analysis.minValue(analysis.fourierAmplitude(filteredRf)), analysis.maxValue(analysis.fourierAmplitude(filteredRf))+analysis.maxValue(analysis.fourierAmplitude(filteredRf))/10);
+    ui->graphFilteredPfAmpl->replot();
+
+
 
 
 // ---------------- Рисование ----------------
@@ -461,7 +618,7 @@ void MainWindow::on_pushButton_clicked(){
         }
         case 10:{
         // --------------- Task 10 ----------------
-            QVector<double> dataFile = inou().load("data.dat");
+            QVector<double> dataFile = inou().load("C:/data.dat");
             QVector<double> xfile(dataFile.length());
             for (int i=0; i<xfile.length(); i++) { xfile[i] = i; }
 
@@ -501,11 +658,35 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphCardio->replot();
         // ----------------------------------------
             break;
-        case 12:
+        case 15:{
         // --------------- Task 12 ----------------
+            QVector<double> wav = inou().loadWave("../soundInput.wav", "../outputData.wav");
+            QVector<double> wavFourier = analysis.fourierAmplitude(wav);
+            QVector<double> xWav(wav.length());
+            for (int i(0); i<wav.length(); i++) { xWav[i] = i; }
 
+            ui->graphWavFile->addGraph();
+            ui->graphWavFile->graph(0)->setData(xWav, wav);
+            ui->graphWavFile->xAxis->setRange(0, xWav.length());
+            ui->graphWavFile->yAxis->setRange(analysis.minValue(wav)-analysis.maxValue(wav)/10, analysis.maxValue(wav)+analysis.maxValue(wav)/10);
+            ui->graphWavFile->replot();
+
+            ui->graphWavFileFourier->addGraph();
+            ui->graphWavFileFourier->graph(0)->setData(xWav, wavFourier);
+            ui->graphWavFileFourier->xAxis->setRange(0, xWav.length());
+            ui->graphWavFileFourier->yAxis->setRange(analysis.minValue(wavFourier)-analysis.maxValue(wavFourier)/10, analysis.maxValue(wavFourier)+analysis.maxValue(wavFourier)/10);
+            ui->graphWavFileFourier->replot();
+
+            for (int i(0); i<wav.length(); i++) { wav[i] *= 4; }
+
+            ui->graphWavFileLoud->addGraph();
+            ui->graphWavFileLoud->graph(0)->setData(xWav, wav);
+            ui->graphWavFileLoud->xAxis->setRange(0, xWav.length());
+            ui->graphWavFileLoud->yAxis->setRange(analysis.minValue(wav)-analysis.maxValue(wav)/10, analysis.maxValue(wav)+analysis.maxValue(wav)/10);
+            ui->graphWavFileLoud->replot();
         // ----------------------------------------
             break;
+        }
 
         default:
             return;
