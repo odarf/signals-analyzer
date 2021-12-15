@@ -64,7 +64,7 @@ struct chunk_t
 
 typedef struct headder_file* header_p;
 
-QVector<double> inou::loadWave(const char* fileName, const char* fileToSave){
+QVector<double> inou::loadWave(const char* fileName){
     QVector<double> outputData;
     FILE *fin = fopen(fileName, "rb");
 
@@ -95,7 +95,6 @@ QVector<double> inou::loadWave(const char* fileName, const char* fileToSave){
     //go to data chunk
     while (true){
        fread(&chunk, sizeof(chunk), 1, fin);
-       //printf("%c%c%c%c\t" "%li\n", chunk.ID[0], chunk.ID[1], chunk.ID[2], chunk.ID[3], chunk.size);
        std::clog << chunk.ID[0] << chunk.ID[1] << chunk.ID[2] << chunk.ID[3] << " Chunk size: " << chunk.size << std::endl;
        if (*(unsigned int *)&chunk.ID == 0x61746164)
             break;
@@ -116,16 +115,17 @@ QVector<double> inou::loadWave(const char* fileName, const char* fileToSave){
         fread(&valueMain[i], sample_size, 1, fin);
     }
 
-    //fclose(fout);
     fclose(fin);
-    //Write data into the file
-    //FILE *fout = fopen(fileToSave, "w");
-    std::ofstream fout("../myshkaLoud.wav", std::ios::binary);
-    /*for (int i = 0; i < samples_count; i++){
-        header.
-    }*/
-    //fout.write(reinterpret_cast<const char*>(&header), sizeof(header));
-    //int16_t d;
+
+    for (int i = 0; i < samples_count; i++){ //i < samples_count;
+        outputData.append(valueMain[i]);
+    }
+    return outputData;
+}
+
+void inou::exportWave(QVector<double> inputdData, int samples_count, const char *fileToSave, double volume){
+    std::ofstream fout(fileToSave, std::ios::binary);
+
     fout << "RIFF----WAVEfmt ";
     write_word(fout,     16, 4 );
     write_word(fout,      1, 2 );
@@ -134,23 +134,20 @@ QVector<double> inou::loadWave(const char* fileName, const char* fileToSave){
     write_word(fout,  88200, 4 ); //88200
     write_word(fout,      4, 2 );
     write_word(fout,     16, 2 );
-    size_t data_chunk_pos = fout.tellp();
+
+    //size_t data_chunk_pos = fout.tellp();
     fout << "data----";
     write_word(fout, samples_count);
 
     for (int i = 0; i < samples_count; i++){ //i < samples_count;
-        //fprintf(fout, "%d\n", value[i]*2);
-        //fout.write(reinterpret_cast<char *>(&d), sizeof(int16_t));
-
-        //write_word(fout, (int)(amplitude * value));
-        //write_word(fout, (int)((max_amplitude-amplitude) * value), 2);
-        write_word(fout, (int)(valueMain[i]*4), 2); //Volume
-        outputData.append(valueMain[i]);
+        write_word(fout, (int)(inputdData[i]*volume), 2); //Volume
     }
+
     /*size_t file_length = fout.tellp();
     fout.seekp(data_chunk_pos + 4);
     write_word(fout , file_length - data_chunk_pos + 8);
     fout.seekp(0 + 4);
     write_word(fout, file_length -8, 4);*/
-    return outputData;
+
+    fout.close();
 }

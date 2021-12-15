@@ -94,7 +94,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>14</number>
+     <number>15</number>
     </property>
     <property name="iconSize">
      <size>
@@ -1602,6 +1602,71 @@
         <x>0</x>
         <y>500</y>
         <width>1010</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tabTask16">
+     <attribute name="title">
+      <string>Страница</string>
+     </attribute>
+     <widget class="QCustomPlot" name="graph08_3" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>500</y>
+        <width>501</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graph08" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>501</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graph08_2" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>260</y>
+        <width>501</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graph08_5" native="true">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>260</y>
+        <width>501</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graph08_6" native="true">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>500</y>
+        <width>501</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="graph08_4" native="true">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>20</y>
+        <width>501</width>
         <height>221</height>
        </rect>
       </property>

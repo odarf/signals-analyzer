@@ -146,12 +146,12 @@ QVector<double> analysis::fourierAmplitude(QVector<double> inputData){
         double imagine = 0;
 
         for(int j = 0; j<length; j++){
-            real += inputData[j] * std::cos((2 * 3.14 * i * j) / length);
-            imagine += inputData[j] * std::sin((2 * 3.14 * i * j) / length);
+            real += inputData[j] * std::cos((2 * 3.14F * i * j) / length);
+            imagine += inputData[j] * std::sin((2 * 3.14F * i * j) / length);
         }
         real /= length;
         imagine /= length;
-        outputData.append(std::abs((std::sqrt(std::pow(real, 2) + std::pow(imagine, 2)))));
+        outputData.append(std::sqrt(real*real + imagine*imagine));
     }
     return outputData;
 }
@@ -174,7 +174,7 @@ QVector<double> analysis::fourierSpectrum(QVector<double> inputData, double wind
         }
         real /= length;
         imagine /= length;
-        outputData.append(std::sqrt(std::pow(real, 2) + std::pow(imagine, 2)));
+        outputData.append(std::sqrt(real*real + imagine*imagine));
     }
     return outputData;
 }
