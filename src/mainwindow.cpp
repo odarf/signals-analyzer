@@ -20,6 +20,7 @@
 #include <math.h>
 #include <time.h>
 #include <random>
+#include <vector>
 
 #include <fstream>
 
@@ -28,6 +29,15 @@ using namespace std;
 
 const int LENGTH = 1000;
 const double DELTA = 50.0;
+
+template<typename T>
+std::vector<T> arrange(T start, T stop, T step = 1) {
+    std::vector<T> values;
+    for (T value = start; value < stop; value += step)
+        values.push_back(value);
+    return values;
+}
+
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -41,9 +51,6 @@ void MainWindow::on_pushButton_clicked(){
     analysis analysis;
 
     double k = -1;
-
-    //double beta = 11;
-    //double alpha = -0.01;
 
     int amplitude[] = {10, 100, 15};
     int frequency[] = {4, 37, 173};
@@ -79,22 +86,23 @@ void MainWindow::on_pushButton_clicked(){
     yCombinated.append(yLinDec);
     yCombinated.append(yExpInc);
 //--------------------------------
-
-    double fc = 0.3;
-    double fc2 = 0.6;
-    int m = 64;
+    double shag_discret = 1/22.050;
+    double fc = 0.4;
+    double fc2 = 0.044;
+    int m = 256;
+    double deltaT = 0.000054; //0.000054;
     int Loper = 2 * m + 1;
-    QVector<double> lpfWeights = analysis.lowpassFilterPotter(fc, m);
-    QVector<double> lpfWeights2 = analysis.lowpassFilterPotter(fc2, m);
-    QVector<double> hpfWeights;
-    QVector<double> pfWeights;
-    QVector<double> rfWeights;
+    QVector<double> lowPassFilterWeights = analysis.lowpassFilterPotter(fc, m, shag_discret); //fc
+    QVector<double> lowPassFilterWeights2 = analysis.lowpassFilterPotter(fc2, m, shag_discret);
+    QVector<double> highPassFilterWeights = analysis.highPassFilter(lowPassFilterWeights, m);
+    QVector<double> bypassFilterWeights = analysis.bypassFilter(lowPassFilterWeights, lowPassFilterWeights2);
+    QVector<double> bandStopFilterWeights = analysis.bandStopFilter(lowPassFilterWeights, lowPassFilterWeights2, m);
 
 // ---------------- Рисование ----------------
     int currentTask = ui->tabWidget->currentIndex() + 1;
     switch(currentTask){
-        case 1:
-        // ---------------- Task 1 ----------------
+        /*case 1: // ---------------- линейные, экспененциальные ----------------
+
             ui->graphLinInc->addGraph();
             ui->graphLinInc->graph(0)->setData(x, yLinInc);
             ui->graphLinInc->xAxis->setRange(0, LENGTH+1);
@@ -126,8 +134,8 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphCombinated->replot();
         // ----------------------------------------
             break;
-        case 2:
-        // ---------------- Task 2 ----------------
+        case 2: // ---------------- рандомы ----------------
+
             ui->graphMyRandom->addGraph();
             ui->graphMyRandom->graph(0)->setData(x, yMyRandom);
             ui->graphMyRandom->xAxis->setRange(0, LENGTH+1);
@@ -141,8 +149,8 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphEmbedRandom->replot();
         // ----------------------------------------
             break;
-        case 3:
-        // ---------------- Task 3 ----------------
+        case 3: // ---------------- статистики рандома ----------------
+
             ui->graphTaskThree->addGraph();
             ui->graphTaskThree->graph(0)->setData(x, yMyRandom);
             ui->graphTaskThree->xAxis->setRange(0, LENGTH);
@@ -161,9 +169,9 @@ void MainWindow::on_pushButton_clicked(){
             ui->labelCurtosisValue->setText(QString::number(analysis.curtosis(yMyRandom)));
             ui->labelIsStationarity->setText(analysis.isStationary(yMyRandom) ? "Стационарен" : "Не стационарен"); //использовать только для случайных процессов
         // -----------------------------------------
-            break;
-        case 4:{
-        // ---------------- Task 4 ----------------
+            break; */
+        case 4:{ // ---------------- корр, ковар рандома ----------------
+
             ui->graphTaskFourRandom1->addGraph();
             ui->graphTaskFourRandom1->graph(0)->setData(x, yEmbedRandom1);
             ui->graphTaskFourRandom1->xAxis->setRange(0, LENGTH);
@@ -229,8 +237,8 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 5:{
-        // ---------------- Task 5 ----------------
+        case 5:{ // ---------------- гармон, полигармон ----------------
+
             ui->graphTaskFiveHarmo->addGraph();
             ui->graphTaskFiveHarmo->graph(0)->setData(x, yHarmonic);
             ui->graphTaskFiveHarmo->xAxis->setRange(0, LENGTH);
@@ -303,8 +311,8 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 6:{
-        // ---------------- Task 6 ----------------
+        case 6:{ // ---------------- смещение, выбросы ----------------
+
             int offsetCoeff = 200;
             QVector<double> offsetted = processing.offset(yLinInc, offsetCoeff);
 
@@ -345,8 +353,8 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 7:{
-        // ---------------- Task 7 ----------------
+        case 7:{ // ---------------- устранение смещения, выброса ----------------
+
             int offsetCoeff = 5;
             QVector<double> offsetted = processing.offset(yHarmonic, offsetCoeff);
             QVector<double> spiked = processing.spikes(yHarmonic);
@@ -382,8 +390,8 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 8:{
-        // ---------------- Task 8 ----------------
+        case 8:{ // ---------------- удаление, выделение рандома ----------------
+
             QVector<double> trAdRa = processing.trendAddRandom(yLinInc);
             QVector<double> pot = processing.pickoutTrend(trAdRa);
             QVector<double> antr = processing.antiTrend(trAdRa);
@@ -424,8 +432,8 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 9:{
-        // ---------------- Task 9 ----------------
+        case 9:{ // ---------------- накопления ----------------
+
             QVector<double> taskNine1 = processing.pdfTaskNine(yHarmonic, 1);
             QVector<double> taskNine10 = processing.pdfTaskNine(yHarmonic, 10);
             QVector<double> taskNine100 = processing.pdfTaskNine(yHarmonic, 100);
@@ -458,8 +466,8 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 10:{
-        // --------------- Task 10 ----------------
+        case 10:{ // --------------- спектры, чтения бинаря ----------------
+
             QVector<double> dataFile = inou().load("C:/data.dat");
             QVector<double> xfile(dataFile.length());
             for (int i=0; i<xfile.length(); i++) { xfile[i] = i; }
@@ -477,7 +485,7 @@ void MainWindow::on_pushButton_clicked(){
 
             ui->graphFourierAmplitude->addGraph();
             ui->graphFourierAmplitude->graph(0)->setData(fourierFreq, fouramp);
-            ui->graphFourierAmplitude->xAxis->setRange(0, 250);
+            ui->graphFourierAmplitude->xAxis->setRange(0, fourierFreq.length());
             ui->graphFourierAmplitude->yAxis->setRange(analysis.minValue(fouramp), analysis.maxValue(fouramp)+5);
             ui->graphFourierAmplitude->replot();
 
@@ -485,14 +493,14 @@ void MainWindow::on_pushButton_clicked(){
 
             ui->graphFourierSpectrum->addGraph();
             ui->graphFourierSpectrum->graph(0)->setData(fourierFreq, fourspec);
-            ui->graphFourierSpectrum->xAxis->setRange(0, 250);
+            ui->graphFourierSpectrum->xAxis->setRange(0, 500);
             ui->graphFourierSpectrum->yAxis->setRange(analysis.minValue(fourspec), analysis.maxValue(fourspec)+6);
             ui->graphFourierSpectrum->replot();
         // ----------------------------------------
             break;
         }
-        case 11:
-        // --------------- Task 11 ----------------
+        case 11: // --------------- кардиограмма ----------------
+
             ui->graphCardio->addGraph();
             ui->graphCardio->graph(0)->setData(x, yCardio);
             ui->graphCardio->xAxis->setRange(0, x.length());
@@ -500,43 +508,37 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphCardio->replot();
         // ----------------------------------------
             break;
-        case 12:{
+        case 12:{ // --------------- веса фильтров! ----------------
+
             ui->graphLPF->addGraph();
-            ui->graphLPF->graph(0)->setData(x, lpfWeights);
+            ui->graphLPF->graph(0)->setData(x, lowPassFilterWeights);
             ui->graphLPF->xAxis->setRange(0, 2*m);
-            ui->graphLPF->yAxis->setRange(analysis.minValue(lpfWeights)-0.01, analysis.maxValue(lpfWeights)+0.01);
+            ui->graphLPF->yAxis->setRange(analysis.minValue(lowPassFilterWeights)-0.01, analysis.maxValue(lowPassFilterWeights)+0.01);
             ui->graphLPF->replot();
 
-            for(int i = 0; i<=Loper-1; i++){ i==m ? hpfWeights.append(1 - lpfWeights[i]) : hpfWeights.append(-lpfWeights[i]); }
-
             ui->graphHPF->addGraph();
-            ui->graphHPF->graph(0)->setData(x, hpfWeights);
+            ui->graphHPF->graph(0)->setData(x, highPassFilterWeights);
             ui->graphHPF->xAxis->setRange(0, 2*m);
-            ui->graphHPF->yAxis->setRange(analysis.minValue(hpfWeights)-0.01, analysis.maxValue(hpfWeights)+0.1);
+            ui->graphHPF->yAxis->setRange(analysis.minValue(highPassFilterWeights)-0.01, analysis.maxValue(highPassFilterWeights)+0.1);
             ui->graphHPF->replot();
 
-            for(int i = 0; i<=Loper-1; i++){ pfWeights.append(lpfWeights2[i] - lpfWeights[i]); }
-
             ui->graphPF->addGraph();
-            ui->graphPF->graph(0)->setData(x, pfWeights);
+            ui->graphPF->graph(0)->setData(x, bypassFilterWeights);
             ui->graphPF->xAxis->setRange(0, 2*m);
-            ui->graphPF->yAxis->setRange(analysis.minValue(pfWeights)-0.01, analysis.maxValue(pfWeights)+0.01);
+            ui->graphPF->yAxis->setRange(analysis.minValue(bypassFilterWeights)-0.01, analysis.maxValue(bypassFilterWeights)+0.01);
             ui->graphPF->replot();
 
-            for(int i = 0; i<=Loper-1; i++){ i==m ? rfWeights.append(1 + lpfWeights[i] - lpfWeights2[i]) : rfWeights.append(lpfWeights[i] - lpfWeights2[i]); }
-
             ui->graphRF->addGraph();
-            ui->graphRF->graph(0)->setData(x, rfWeights);
+            ui->graphRF->graph(0)->setData(x, bandStopFilterWeights);
             ui->graphRF->xAxis->setRange(0, 2*m);
-            ui->graphRF->yAxis->setRange(analysis.minValue(rfWeights)-0.01, analysis.maxValue(rfWeights)+0.01);
+            ui->graphRF->yAxis->setRange(analysis.minValue(bandStopFilterWeights)-0.01, analysis.maxValue(bandStopFilterWeights)+0.01);
             ui->graphRF->replot();
-            break;
-        }
-        case 13:{
-            QVector<double> achxLP = analysis.fourierAmplitude(lpfWeights);
-            QVector<double> achxHP = analysis.fourierAmplitude(hpfWeights);
-            QVector<double> achxPF = analysis.fourierAmplitude(pfWeights);
-            QVector<double> achxRF = analysis.fourierAmplitude(rfWeights);
+
+        // --------------- спектры фильтров ----------------
+            QVector<double> achxLP = analysis.fourierAmplitude(lowPassFilterWeights);
+            QVector<double> achxHP = analysis.fourierAmplitude(highPassFilterWeights);
+            QVector<double> achxPF = analysis.fourierAmplitude(bypassFilterWeights);
+            QVector<double> achxRF = analysis.fourierAmplitude(bandStopFilterWeights);
 
             for(int i = 0; i<m; i++){
                 achxLP[i] *= 2*m;
@@ -568,12 +570,98 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphAfcRf->xAxis->setRange(0, m);
             ui->graphAfcRf->yAxis->setRange(0, analysis.maxValue(achxRF)+analysis.maxValue(achxRF)/10);
             ui->graphAfcRf->replot();
+
+            QVector<double> wav = inou().loadWave("../a_input.wav");
+            QVector<double> Fonem;
+
+            for(int i = 29000 ; i<34000; i++){
+                Fonem.append(wav[i]);
+            }
+            QVector<double> xWav;
+            for (int i = 0; i<wav.length(); i++) {
+                xWav.append(i);
+            }
+
+
+            QVector<double> FonemFourier = analysis.fourierAmplitude(Fonem);
+            QVector<double> herz = analysis.fourierHerz(FonemFourier, 1/22050);
+            QVector<double> freq = analysis.calculateFrequency(0.0000054, Fonem.length());
+
+
+            ui->graph08->addGraph();
+            ui->graph08->graph(0)->setData(xWav, Fonem);
+            ui->graph08->xAxis->setRange(0, Fonem.length());
+            ui->graph08->yAxis->setRange(analysis.minValue(Fonem)-analysis.maxValue(Fonem)/10, analysis.maxValue(Fonem)+analysis.maxValue(Fonem)/10);
+            ui->graph08->replot();
+
+            int N = Fonem.length();
+
+            QVector<double> xWav1;
+            for (int i= 0; i<shag_discret; i++) {
+                xWav1.append((double)(i * shag_discret));
+            }
+            //inou().exportWave(Fonem, Fonem.length(), "../FonemTest.wav", 1);
+
+            vector<double> tryarrange = arrange<double>(0, (double)FonemFourier.length(), shag_discret);
+            QVector<double> tre;
+            for (int i = 0; i<tryarrange.size(); i++) {
+                tre.append(tryarrange[i] * 100);
+            }
+
+            ui->graph08_2->addGraph();
+            ui->graph08_2->graph(0)->setData(tre, FonemFourier); //freq
+            ui->graph08_2->xAxis->setRange(0, tre.length());
+            ui->graph08_2->setInteraction(QCP::iRangeZoom,true);
+            ui->graph08_2->setInteraction(QCP::iRangeDrag,true);
+            ui->graph08_2->yAxis->setRange(analysis.minValue(FonemFourier)-analysis.maxValue(FonemFourier)/10, analysis.maxValue(FonemFourier)+analysis.maxValue(FonemFourier)/10);
+            ui->graph08_2->replot();
+
+            QVector<double> filteredFonem = processing.convolution(Fonem, highPassFilterWeights);
+            //QVector<double> filteredFonem = processing.convolution(Fonem, lowPassFilterWeights);
+            //QVector<double> filteredFonem = processing.convolution(Fonem, bypassFilterWeights);
+            //QVector<double> filteredFonem = processing.convolution(Fonem, bandStopFilterWeights);
+
+            for(int i = 0; i<Fonem.length(); i++){
+
+                //filteredFonem.append(Fonem[i]*lowPassFilterWeights[i]);
+                //filteredFonem[i] /= 1000000.0;
+                //filteredFonem[i] *= 1000.0;
+            }
+
+            inou().exportWave(filteredFonem, filteredFonem.length(), "../testFiltered.wav", 1);
+
+            ui->graph08_3->addGraph();
+            ui->graph08_3->graph(0)->setData(xWav, filteredFonem);
+            ui->graph08_3->xAxis->setRange(0, filteredFonem.length());
+            ui->graph08_3->setInteraction(QCP::iRangeZoom,true);
+            ui->graph08_3->setInteraction(QCP::iRangeDrag,true);
+            ui->graph08_3->yAxis->setRange(analysis.minValue(filteredFonem)-analysis.maxValue(filteredFonem)/10, analysis.maxValue(filteredFonem)+analysis.maxValue(filteredFonem)/10);
+            ui->graph08_3->replot();
+
+            ui->graphWavFileLoud->addGraph();
+            ui->graphWavFileLoud->graph(0)->setData(xWav, wav);
+            ui->graphWavFileLoud->xAxis->setRange(0, xWav.length());
+            ui->graphWavFileLoud->yAxis->setRange(analysis.minValue(wav)-analysis.maxValue(wav)/10, analysis.maxValue(wav)+analysis.maxValue(wav)/10);
+            ui->graphWavFileLoud->replot();
+
+            ui->graphWavFileLoud->addGraph();
+            ui->graphWavFileLoud->graph(0)->setData(xWav, wav);
+            ui->graphWavFileLoud->xAxis->setRange(0, xWav.length());
+            ui->graphWavFileLoud->yAxis->setRange(analysis.minValue(wav)-analysis.maxValue(wav)/10, analysis.maxValue(wav)+analysis.maxValue(wav)/10);
+            ui->graphWavFileLoud->replot();
+
+            ui->graphWavFileLoud->addGraph();
+            ui->graphWavFileLoud->graph(0)->setData(xWav, wav);
+            ui->graphWavFileLoud->xAxis->setRange(0, xWav.length());
+            ui->graphWavFileLoud->yAxis->setRange(analysis.minValue(wav)-analysis.maxValue(wav)/10, analysis.maxValue(wav)+analysis.maxValue(wav)/10);
+            ui->graphWavFileLoud->replot();
             break;
+
         }
         case 14:{
             QVector<double> dataFile = inou().load("C:/data.dat");
             int N = dataFile.length();
-            int M = lpfWeights.length();
+            int M = lowPassFilterWeights.length();
             QVector<double> filteredLp(N+M);
             int tempN = N + M-1;
 
@@ -581,7 +669,7 @@ void MainWindow::on_pushButton_clicked(){
                 int const jmn = (i >= M - 1) ? i - (M - 1) : 0;
                 int const jmx = (i < N - 1)  ? i           : N-1;
                 for(auto j(jmn); j<=jmx; ++j){
-                    filteredLp[i] += dataFile[j] * lpfWeights[i-j];
+                    filteredLp[i] += dataFile[j] * lowPassFilterWeights[i-j];
                 }
             }
 
@@ -602,7 +690,7 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphFilteredLpAmpl->yAxis->setRange(analysis.minValue(analysis.fourierAmplitude(filteredLp)), analysis.maxValue(analysis.fourierAmplitude(filteredLp))+analysis.maxValue(analysis.fourierAmplitude(filteredLp))/10);
             ui->graphFilteredLpAmpl->replot();
 
-            M = hpfWeights.length();
+            M = highPassFilterWeights.length();
             QVector<double> filteredHp(N+M);
             tempN = N + M-1;
 
@@ -610,7 +698,7 @@ void MainWindow::on_pushButton_clicked(){
                 int const jmn = (i >= M - 1) ? i - (M - 1) : 0;
                 int const jmx = (i < N - 1)  ? i           : N-1;
                 for(auto j(jmn); j<=jmx; ++j){
-                    filteredHp[i] += dataFile[j] * hpfWeights[i-j];
+                    filteredHp[i] += dataFile[j] * highPassFilterWeights[i-j];
                 }
             }
 
@@ -631,7 +719,7 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphFilteredHpAmpl->yAxis->setRange(analysis.minValue(analysis.fourierAmplitude(filteredHp)), analysis.maxValue(analysis.fourierAmplitude(filteredHp))+analysis.maxValue(analysis.fourierAmplitude(filteredHp))/10);
             ui->graphFilteredHpAmpl->replot();
 
-            M = rfWeights.length();
+            M = bandStopFilterWeights.length();
             QVector<double> filteredRf(N+M);
             tempN = N + M-1;
 
@@ -639,7 +727,7 @@ void MainWindow::on_pushButton_clicked(){
                 int const jmn = (i >= M - 1) ? i - (M - 1) : 0;
                 int const jmx = (i < N - 1)  ? i           : N-1;
                 for(auto j(jmn); j<=jmx; ++j){
-                    filteredRf[i] += dataFile[j] * rfWeights[i-j];
+                    filteredRf[i] += dataFile[j] * bandStopFilterWeights[i-j];
                 }
             }
 
@@ -662,7 +750,7 @@ void MainWindow::on_pushButton_clicked(){
             break;
         }
         case 15:{
-        // --------------- Task 12 ----------------
+        // --------------- вав файл, изменение громкости ----------------
             QVector<double> wav = inou().loadWave("../dojdik.wav");
             QVector<double> wavFourier = analysis.fourierAmplitude(wav);
             QVector<double> xWav(wav.length());
@@ -698,16 +786,17 @@ void MainWindow::on_pushButton_clicked(){
         // ----------------------------------------
             break;
         }
-        case 16:{
+/*        case 16:{
+        // --------------- выделение формант ----------------
             //ПРОДОЛЖИТЬ
-            QVector<double> wav = inou().loadWave("../pole.wav");
-            QVector<double> Fonem;
+            QVector<double> wav = inou().loadWave("../uuu.wav");
+            QVector<double> Fonem;// = wav;
 
-            for(int i(4000); i<16000; i++){
+            for(int i = 0 ; i<32000; i++){
                 Fonem.append(wav[i]);
             }
             QVector<double> xWav;
-            for (int i(0); i<wav.length(); i++) {
+            for (int i = 0; i<wav.length(); i++) {
                 xWav.append(i);
             }
 
@@ -741,11 +830,17 @@ void MainWindow::on_pushButton_clicked(){
             ui->graph08_2->yAxis->setRange(analysis.minValue(FonemFourier)-analysis.maxValue(FonemFourier)/10, analysis.maxValue(FonemFourier)+analysis.maxValue(FonemFourier)/10);
             ui->graph08_2->replot();
 
-            /*ui->graph08_3->addGraph();
+            QVector<double> filteredFonem;
+
+            for(int i = 0; i<Fonem.length(); i++){
+                filteredFonem.append(Fonem[i]*)
+            }
+
+            ui->graph08_3->addGraph();
             ui->graph08_3->graph(0)->setData(xWav, foo);
             ui->graph08_3->xAxis->setRange(0, foo.length());
             ui->graph08_3->yAxis->setRange(analysis.minValue(foo)-analysis.maxValue(foo)/10, analysis.maxValue(foo)+analysis.maxValue(foo)/10);
-            ui->graph08_3->replot();*/
+            ui->graph08_3->replot();
 
             ui->graphWavFileLoud->addGraph();
             ui->graphWavFileLoud->graph(0)->setData(xWav, wav);
@@ -764,8 +859,9 @@ void MainWindow::on_pushButton_clicked(){
             ui->graphWavFileLoud->xAxis->setRange(0, xWav.length());
             ui->graphWavFileLoud->yAxis->setRange(analysis.minValue(wav)-analysis.maxValue(wav)/10, analysis.maxValue(wav)+analysis.maxValue(wav)/10);
             ui->graphWavFileLoud->replot();
+            break;
         }
-
+*/
 
         default:
             return;

@@ -143,3 +143,20 @@ QVector<double> processing::pdfTaskNine(QVector<double> inputData, int count){
     outputData.pop_front();
     return outputData;
 }
+
+double processing::calc_convolution(QVector<double> x, QVector<double> h, int j){
+    double conv = 0;
+    for(int i = h.length() - 1; i>=0; i--){
+        conv += x[(i+j) % x.length()] * h[i];
+    }
+    return conv;
+}
+
+QVector<double> processing::convolution(QVector<double> x, QVector<double> h){
+    QVector<double> output;
+    for(int i = 0; i<x.length(); i++){
+        output.push_back(calc_convolution(x, h, i));
+    }
+    //std::reverse(output.begin(), output.end());
+    return output;
+}

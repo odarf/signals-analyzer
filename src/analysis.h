@@ -8,6 +8,9 @@ class analysis
 private:
 public:
     analysis();
+
+    QVector<double> herzScale;
+
     ///Поиск минимального значения во входном массиве
     double minValue(QVector<double> x);
 
@@ -53,6 +56,10 @@ public:
     ///Амплитуда Фурье
     QVector<double> fourierAmplitude(QVector<double> inputData);
 
+    QVector<double> fourierHerz(QVector<double> inputData, double dt);
+
+    QVector2D foo();
+
     ///Спектр Фурье
     QVector<double> fourierSpectrum(QVector<double> inputData, double window);
 
@@ -60,8 +67,13 @@ public:
     QVector<double> calculateFrequency(double delta_t, int N);
 
     ///Расчёт импульсной реакции фильтра низких частот Поттера
-    QVector<double> lowpassFilterPotter(double fc, int m);
+    QVector<double> lowpassFilterPotter(double fc, int m, double dt);
 
+    QVector<double> highPassFilter(QVector<double> lowPassFilterWeights, int m);
+
+    QVector<double> bypassFilter(QVector<double> lowPassFilterWeights1, QVector<double> lowPassFilterWeights2);
+
+    QVector<double> bandStopFilter(QVector<double> lowPassFilterWeights1, QVector<double> lowPassFilterWeights2, int m);
 };
 
 #endif // ANALYSIS_H

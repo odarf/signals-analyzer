@@ -51,6 +51,10 @@ public:
 
     ///Различное количество накоплений
     QVector<double> pdfTaskNine(QVector<double> inputData, int count);
+
+    double calc_convolution(QVector<double> x, QVector<double> h, int j);
+
+    QVector<double> convolution(QVector<double> x, QVector<double> h);
 };
 
 #endif // PROCESSING_H

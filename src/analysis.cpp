@@ -140,20 +140,41 @@ QVector<double> analysis::covariance(QVector<double> firstProcess, QVector<doubl
 QVector<double> analysis::fourierAmplitude(QVector<double> inputData){
     int length = inputData.length();
     QVector<double> outputData;
+    //double fgr = 1/(0.001 * 2);
+    //double df = (2*fgr)/length;
 
-    for(int i = 0; i<length/2; i++){
+    for(double i = 0; i<=length/2; i++){ //length/2
         double real = 0;
         double imagine = 0;
 
         for(int j = 0; j<length; j++){
-            real += inputData[j] * std::cos((2 * 3.14F * i * j) / length);
-            imagine += inputData[j] * std::sin((2 * 3.14F * i * j) / length);
+            real += inputData[j] * std::cos(2 * 3.14 * i * j / length);
+            imagine += inputData[j] * std::sin(2 * 3.14 * i * j / length);
         }
         real /= length;
         imagine /= length;
-        outputData.append(std::sqrt(real*real + imagine*imagine));
+        double y = std::sqrt(real * real + imagine * imagine);
+        outputData.append(y);
     }
     return outputData;
+}
+
+QVector<double> analysis::fourierHerz(QVector<double> inputData, double dt){
+    int maxHerz = 5000;
+    int N = inputData.length();
+    QVector<double> outputHerz;
+
+    double df = 1.0f/(N*dt);
+
+    for(int i = 1; i<N; i++){
+        if(i*df > maxHerz){
+            break;
+        }
+
+        outputHerz.append(i*df);
+    }
+    return outputHerz;
+
 }
 
 QVector<double> analysis::fourierSpectrum(QVector<double> inputData, double window){
@@ -181,32 +202,43 @@ QVector<double> analysis::fourierSpectrum(QVector<double> inputData, double wind
 
 QVector<double> analysis::calculateFrequency(double delta_t, int N){
     QVector<double> frequency;
-
+/*
     //delta_t = 1/(2*fгр) = 1/fд   //Sec
     double f_gr = 1/(2 * delta_t); //Hz
     double Fn = f_gr;              //Hz Fn = N/2
     double delta_f = f_gr/(N/2);   //Hz
     for(int i = 0; i<N/2; i++) { frequency.append(i*delta_f); }
+*/
+    double fgr = 1/(delta_t * 2);
+    double df = (2*fgr)/N;
+
+    for(int i = 0; i<N/2 - 1; i++){
+        frequency.append(i*df);
+    }
+
     return frequency;
 }
 
-QVector<double> analysis::lowpassFilterPotter(double fc, int m){
+QVector<double> analysis::lowpassFilterPotter(double fc, int m, double dt){
     const double d[4] = {0.35577019, 0.2436983, 0.07211497, 0.00630165};
-    float fact = float(2.0*fc);
+    double fact = 2.0 * fc * dt;
+    double Loper = 2 * m + 1;
     QVector<double> lpw;
+    QVector<double> output;
     lpw.append(fact);
-    auto arg = fact * 3.14;
+    double arg = fact * 3.14;
     for(int i = 1; i<=m; i++){
         lpw.append(std::sin(arg*i)/(3.14*i));
     }
     lpw[m] /= 2.0;
+
     //P310
-    auto sumg = lpw[0];
+    double sumg = lpw[0];
     for(int i = 1; i<=m; i++){
-        auto sum = d[0];
-        arg = 3.14 * i/m;
+        double sum = d[0];
+        arg = 3.14 * (double)i/(double)m;
         for(int k = 1; k<=3; k++){
-            sum+=2.0*d[k]*std::cos(arg*k);
+            sum+=2.0*d[k]*std::cos(arg*(double)k);
         }
         lpw[i] *= sum;
         sumg += 2*lpw[i];
@@ -215,9 +247,53 @@ QVector<double> analysis::lowpassFilterPotter(double fc, int m){
         lpw[i] /= sumg;
     }
     QVector<double> temp;
-    for(int i = m; i>0; i--){
+    for(int i = m; i>1; i--){
         temp.append(lpw[i]);
     }
     temp.append(lpw);
+
+    /*for(int i = 2*m; i>=0; i--){
+        if(i >= m){
+            output.append(lpw[i-m]);
+        }else{
+            output.append(lpw[2*m-i]);
+        }
+    }*/
+
     return temp;
+}
+
+QVector<double> analysis::highPassFilter(QVector<double> lowPassFilterWeights, int m){
+    QVector<double> outputHPWeights;
+
+    for(int i = 0; i<lowPassFilterWeights.length(); i++){
+       if(i == m){
+           outputHPWeights.append(1.0 - lowPassFilterWeights[i]);
+       }else{
+           outputHPWeights.append(-lowPassFilterWeights[i]);
+       }
+    }
+    return outputHPWeights;
+}
+
+QVector<double> analysis::bypassFilter(QVector<double> lowPassFilterWeights1, QVector<double> lowPassFilterWeights2){
+    QVector<double> outputBPWeights;
+
+    for(int i = 0; i<lowPassFilterWeights1.length(); i++){
+        outputBPWeights.append(lowPassFilterWeights2[i] - lowPassFilterWeights1[i]);
+    }
+    return outputBPWeights;
+}
+
+QVector<double> analysis::bandStopFilter(QVector<double> lowPassFilterWeights1, QVector<double> lowPassFilterWeights2, int m){
+    QVector<double> outputBSWeights;
+
+    for(int i = 0; i<lowPassFilterWeights1.length(); i++){
+        if(i == m){
+            outputBSWeights.append(1.0 + lowPassFilterWeights1[i] - lowPassFilterWeights2[i]);
+        }else{
+            outputBSWeights.append(lowPassFilterWeights1[i] - lowPassFilterWeights2[i]);
+        }
+    }
+    return outputBSWeights;
 }
