@@ -89,8 +89,8 @@ void MainWindow::on_pushButton_clicked(){
 
     //double delta_t = 0.45;
     double delta_t = 1.0/22050.0;
-    double fc = 500; //
-    double fc2 = 700; //0.xxx,  x = Hz
+    double fc = 3600; //
+    double fc2 = 4000; //0.xxx,  x = Hz
     int m = 1024;
 
 
@@ -520,25 +520,25 @@ void MainWindow::on_pushButton_clicked(){
         case 12:{ // --------------- веса фильтров! ----------------
 
             ui->graphLPF->addGraph();
-            ui->graphLPF->graph(0)->setData(x, lowPassFilterWeights);
+            ui->graphLPF->graph(0)->setData(xLarge, lowPassFilterWeights);
             ui->graphLPF->xAxis->setRange(0, 2*m);
             ui->graphLPF->yAxis->setRange(analysis.minValue(lowPassFilterWeights)-0.01, analysis.maxValue(lowPassFilterWeights)+0.01);
             ui->graphLPF->replot();
 
             ui->graphHPF->addGraph();
-            ui->graphHPF->graph(0)->setData(x, highPassFilterWeights);
+            ui->graphHPF->graph(0)->setData(xLarge, highPassFilterWeights);
             ui->graphHPF->xAxis->setRange(0, 2*m);
             ui->graphHPF->yAxis->setRange(analysis.minValue(highPassFilterWeights)-0.01, analysis.maxValue(highPassFilterWeights)+0.1);
             ui->graphHPF->replot();
 
             ui->graphPF->addGraph();
-            ui->graphPF->graph(0)->setData(x, bypassFilterWeights);
+            ui->graphPF->graph(0)->setData(xLarge, bypassFilterWeights);
             ui->graphPF->xAxis->setRange(0, 2*m);
             ui->graphPF->yAxis->setRange(analysis.minValue(bypassFilterWeights)-0.01, analysis.maxValue(bypassFilterWeights)+0.01);
             ui->graphPF->replot();
 
             ui->graphRF->addGraph();
-            ui->graphRF->graph(0)->setData(x, bandStopFilterWeights);
+            ui->graphRF->graph(0)->setData(xLarge, bandStopFilterWeights);
             ui->graphRF->xAxis->setRange(0, 2*m);
             ui->graphRF->yAxis->setRange(analysis.minValue(bandStopFilterWeights)-0.01, analysis.maxValue(bandStopFilterWeights)+0.01);
             ui->graphRF->replot();
@@ -777,7 +777,13 @@ void MainWindow::on_pushButton_clicked(){
 
             auto deltaf = 22050/N;
 
-            QVector<double> scale = analysis.fourierHerz(FonemFourier, delta_t);
+            //QVector<double> scale = analysis.fourierHerz(FonemFourier, delta_t);
+            QVector<double> scale;
+            vector<double> scalee = arrange<double>(0, FonemFourier.length()*deltaf, deltaf);
+
+            for(int i = 0; i<scalee.size(); i++){
+                scale.append(scalee[i]);
+            }
 
             ui->graph08_2->addGraph();
             ui->graph08_2->graph(0)->setData(scale, FonemFourier); //freq //tre
@@ -792,14 +798,7 @@ void MainWindow::on_pushButton_clicked(){
             QVector<double> filteredFonem = processing.convolution(Fonem, bypassFilterWeights);
             //QVector<double> filteredFonem = processing.convolution(Fonem, bandStopFilterWeights);
 
-            for(int i = 0; i<Fonem.length(); i++){
-
-                //filteredFonem.append(Fonem[i]*lowPassFilterWeights[i]);
-                //filteredFonem[i] /= 1000000.0;
-                //filteredFonem[i] *= 1000.0;
-            }
-
-            inou().exportWave(filteredFonem, filteredFonem.length(), "../testFiltered.wav", 2);
+            inou().exportWave(filteredFonem, filteredFonem.length(), "../testFiltered.wav", 3);
 
             ui->graph08_4->addGraph();
             ui->graph08_4->graph(0)->setData(xWav, filteredFonem);
@@ -810,7 +809,13 @@ void MainWindow::on_pushButton_clicked(){
             ui->graph08_4->replot();
 
             QVector<double> filteredFour = analysis.fourierAmplitude(filteredFonem);
-            scale = analysis.fourierHerz(filteredFour, delta_t);
+            //scale = analysis.fourierHerz(filteredFour, delta_t);
+            deltaf = 22050.0/filteredFonem.length();
+            scalee = arrange<double>(0, filteredFour.length()*deltaf, deltaf);
+            scale.clear();
+            for(int i = 0; i<scalee.size(); i++){
+                scale.append(scalee[i]);
+            }
 
             ui->graph08_5->addGraph();
             ui->graph08_5->graph(0)->setData(scale, filteredFour);
