@@ -129,7 +129,7 @@ void inou::exportWave(QVector<double> inputdData, int samples_count, const char 
     fout << "RIFF----WAVEfmt ";
     write_word(fout,     16, 4 );
     write_word(fout,      1, 2 );
-    write_word(fout,      2, 2 );
+    write_word(fout,      1, 2 ); //channels
     write_word(fout,  22050, 4 ); //22050,
     write_word(fout,  88200, 4 ); //88200
     write_word(fout,      4, 2 );

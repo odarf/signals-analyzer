@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <math.h>
 #include <QDebug>
+#include <QtMath>
 
 analysis::analysis(){}
 
@@ -140,16 +141,15 @@ QVector<double> analysis::covariance(QVector<double> firstProcess, QVector<doubl
 QVector<double> analysis::fourierAmplitude(QVector<double> inputData){
     int length = inputData.length();
     QVector<double> outputData;
-    //double fgr = 1/(0.001 * 2);
-    //double df = (2*fgr)/length;
 
-    for(double i = 0; i<=length/2; i++){ //length/2
-        double real = 0;
-        double imagine = 0;
-
+    double real = 0.0;
+    double imagine = 0.0;
+    for(int i = 0; i<length/2; i++){
+        real = 0.0;
+        imagine = 0.0;
         for(int j = 0; j<length; j++){
-            real += inputData[j] * std::cos(2 * 3.14 * i * j / length);
-            imagine += inputData[j] * std::sin(2 * 3.14 * i * j / length);
+            real += inputData[j] * std::cos((2.0 * 3.14159265 * i * j) / length);
+            imagine += inputData[j] * std::sin((2.0 * 3.14159265 * i * j) / length);
         }
         real /= length;
         imagine /= length;
@@ -160,19 +160,20 @@ QVector<double> analysis::fourierAmplitude(QVector<double> inputData){
 }
 
 QVector<double> analysis::fourierHerz(QVector<double> inputData, double dt){
-    int maxHerz = 5000;
+    int maxHerz = 8000;
     int N = inputData.length();
     QVector<double> outputHerz;
 
-    double df = 1.0f/(N*dt);
+    //double df = 1.0f/(N*dt);
+    double df = 22050/N;
 
     for(int i = 1; i<N; i++){
         if(i*df > maxHerz){
             break;
         }
-
         outputHerz.append(i*df);
     }
+    //outputHerz[0] = 0;
     return outputHerz;
 
 }
@@ -190,8 +191,8 @@ QVector<double> analysis::fourierSpectrum(QVector<double> inputData, double wind
         double real = 0;
         double imagine = 0;
         for(int j = 0; j<length; j++){
-            real += inputData[j] * std::cos((2 * 3.14 * i * j) / length);
-            imagine += inputData[j] * std::sin((2 * 3.14 * i * j) / length);
+            real += inputData[j] * std::cos((2 * 3.14159265 * i * j) / length);
+            imagine += inputData[j] * std::sin((2 * 3.14159265 * i * j) / length);
         }
         real /= length;
         imagine /= length;
@@ -221,14 +222,14 @@ QVector<double> analysis::calculateFrequency(double delta_t, int N){
 
 QVector<double> analysis::lowpassFilterPotter(double fc, int m, double dt){
     const double d[4] = {0.35577019, 0.2436983, 0.07211497, 0.00630165};
-    double fact = 2.0 * fc * dt;
-    double Loper = 2 * m + 1;
+    double fact = double(2 * fc * dt);// * dt; //*dt 2.0 *
+    //double Loper = 2 * m + 1;
     QVector<double> lpw;
-    QVector<double> output;
     lpw.append(fact);
-    double arg = fact * 3.14;
+    double arg = fact * 3.14159265;
     for(int i = 1; i<=m; i++){
-        lpw.append(std::sin(arg*i)/(3.14*i));
+        double foo = std::sin(arg*double(i)) / (3.14159265*double(i));
+        lpw.append(foo);
     }
     lpw[m] /= 2.0;
 
@@ -236,9 +237,9 @@ QVector<double> analysis::lowpassFilterPotter(double fc, int m, double dt){
     double sumg = lpw[0];
     for(int i = 1; i<=m; i++){
         double sum = d[0];
-        arg = 3.14 * (double)i/(double)m;
+        arg = 3.14159265 * double(i)/double(m);
         for(int k = 1; k<=3; k++){
-            sum+=2.0*d[k]*std::cos(arg*(double)k);
+            sum+=2.0*d[k]*std::cos(arg*double(k));
         }
         lpw[i] *= sum;
         sumg += 2*lpw[i];
@@ -247,18 +248,10 @@ QVector<double> analysis::lowpassFilterPotter(double fc, int m, double dt){
         lpw[i] /= sumg;
     }
     QVector<double> temp;
-    for(int i = m; i>1; i--){
+    for(int i = m; i>=1; i--){
         temp.append(lpw[i]);
     }
     temp.append(lpw);
-
-    /*for(int i = 2*m; i>=0; i--){
-        if(i >= m){
-            output.append(lpw[i-m]);
-        }else{
-            output.append(lpw[2*m-i]);
-        }
-    }*/
 
     return temp;
 }
